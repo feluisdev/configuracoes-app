@@ -214,9 +214,84 @@ export async function inativarTipoServico(tipoServicoId: string): Promise<any> {
 }
 
 
-// === STATUS DE PEDIDOS (CUF16) - Placeholders ===
-// export async function getStatusPedidos(params): Promise<WrapperListaStatusPedidoDTO> {}
-// export async function getStatusPedidoById(id: string): Promise<StatusPedido> {}
-// export async function createStatusPedido(data: CreateStatusPedidoCommand): Promise<StatusPedido> {}
-// export async function updateStatusPedido(id: string, data: UpdateStatusPedidoCommand): Promise<StatusPedido> {}
-// export async function deleteStatusPedido(id: string): Promise<void> {} // Ou inativar
+// === STATUS DE PEDIDOS (CUF16) ===
+
+export async function getStatusPedidos(
+  codigo?: string,
+  nome?: string,
+  visivelPortal?: boolean,
+  // Spring Pageable é mais complexo, por ora vamos simplificar para numero da pagina e tamanho
+  // Em uma implementação real, construiríamos o objeto Pageable ou os query params corretos.
+  pagina: number = 0,
+  tamanho: number = 20,
+  sort?: string // Ex: "ordem,asc" ou "nome,desc"
+): Promise<PageStatusPedidoResponse> {
+  const queryParams = new URLSearchParams();
+  if (codigo) queryParams.append('codigo', codigo);
+  if (nome) queryParams.append('nome', nome);
+  if (visivelPortal !== undefined) queryParams.append('visivelPortal', visivelPortal.toString());
+  queryParams.append('page', pagina.toString());
+  queryParams.append('size', tamanho.toString());
+  if (sort) queryParams.append('sort', sort);
+
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/status-pedido?${queryParams.toString()}`);
+  if (!response.ok) {
+    throw new Error('Falha ao buscar status de pedidos');
+  }
+  const page: PageStatusPedidoResponse = await response.json();
+  // Mapear content para adicionar 'estado' se necessário para UI, baseado em 'visivelPortal'
+  page.content = page.content.map(sp => ({
+    ...sp,
+    estado: sp.visivelPortal ? 'ATIVO' : 'INATIVO'
+  }));
+  return page;
+}
+
+export async function getStatusPedidoById(id: number): Promise<StatusPedido> {
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/status-pedido/${id}`);
+  if (!response.ok) {
+    throw new Error(`Falha ao buscar status de pedido com ID ${id}`);
+  }
+  const dto: StatusPedido = await response.json();
+  return {
+      ...dto,
+      estado: dto.visivelPortal ? 'ATIVO' : 'INATIVO'
+  };
+}
+
+export async function createStatusPedido(data: CreateStatusPedidoCommand): Promise<number> { // Backend retorna o ID
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/status-pedido`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (response.status !== 201) { // CREATED
+    const errorBody = await response.json().catch(() => ({ message: 'Erro desconhecido ao criar status de pedido.' }));
+    throw new Error(errorBody.message || `Falha ao criar status de pedido. Status: ${response.status}`);
+  }
+  return response.json(); // Retorna o ID
+}
+
+export async function updateStatusPedido(id: number, data: UpdateStatusPedidoCommand): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/status-pedido/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data), // UpdateStatusPedidoCommand já tem os campos corretos
+  });
+  if (response.status !== 204) { // NO_CONTENT
+    const errorBody = await response.json().catch(() => ({ message: 'Erro desconhecido ao atualizar status de pedido.' }));
+    throw new Error(errorBody.message || `Falha ao atualizar status de pedido. Status: ${response.status}`);
+  }
+  // No content, retorna void
+}
+
+export async function inativarStatusPedido(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/status-pedido/${id}`, {
+    method: 'DELETE',
+  });
+  if (response.status !== 204) { // NO_CONTENT
+     const errorBody = await response.json().catch(() => ({ message: 'Erro desconhecido ao inativar status de pedido.' }));
+    throw new Error(errorBody.message || `Falha ao inativar status de pedido. Status: ${response.status}`);
+  }
+   // No content, retorna void
+}

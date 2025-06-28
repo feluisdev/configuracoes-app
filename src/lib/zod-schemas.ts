@@ -42,15 +42,18 @@ export type TipoServicoFormValues = z.infer<typeof TipoServicoFormSchema>;
 // --- STATUS DE PEDIDOS (CUF16) ---
 // Baseado em CreateStatusPedidoDTO e UpdateStatusPedidoCommand do backend
 export const StatusPedidoFormSchema = z.object({
+  codigo: z.string().min(2, { message: "O código deve ter entre 2 e 20 caracteres." })
+    .max(20, { message: "O código não pode ter mais de 20 caracteres." }),
   nome: z.string().min(3, { message: "O nome deve ter pelo menos 3 caracteres." })
     .max(100, { message: "O nome não pode ter mais de 100 caracteres." }),
-  cor: z.string()
-    .regex(/^#([0-9A-Fa-f]{3}){1,2}$/, { message: "Formato de cor hexadecimal inválido." }),
-  ordem: z.number().int().min(0, { message: "A ordem deve ser um número positivo." }),
-  codigo: z.string().min(1, { message: "O código é obrigatório." })
-    .max(50, { message: "O código não pode ter mais de 50 caracteres." }).optional().or(z.literal('')),
   descricao: z.string().max(255, { message: "A descrição não pode ter mais de 255 caracteres." }).optional().or(z.literal('')),
-  ativo: z.boolean().optional(),
+  cor: z.string()
+    .max(20, { message: "A cor deve ter no máximo 20 caracteres."}) // Ex: #RRGGBB
+    .regex(/^#([0-9A-Fa-f]{3}){1,2}$/, { message: "Formato de cor hexadecimal inválido." })
+    .optional().or(z.literal('')),
+  icone: z.string().max(50, { message: "O ícone não pode ter mais de 50 caracteres." }).optional().or(z.literal('')),
+  ordem: z.number().int().min(0, { message: "A ordem deve ser um número não negativo." }).optional().nullable(),
+  visivelPortal: z.boolean(), // No CreateDTO é NotNull. Para formulário, pode ter um default.
 });
 export type StatusPedidoFormValues = z.infer<typeof StatusPedidoFormSchema>;
 

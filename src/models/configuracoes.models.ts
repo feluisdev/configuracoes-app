@@ -130,37 +130,68 @@ export interface WrapperListaTipoServicoDTO {
 
 
 // --- Modelos para Status de Pedidos (CUF16) ---
+
+/**
+ * Representa um Status de Pedido como exibido na UI.
+ * Baseado em StatusPedidoResponseDTO.java
+ */
 export interface StatusPedido {
-  id?: number; // ou string
-  statusPedidoId: string; // Identificador principal
+  id: number; // Backend usa Integer para ID
+  // statusPedidoId?: string; // O backend parece usar apenas 'id' (Integer) como identificador principal
+  codigo: string;
   nome: string;
-  cor: string; // ex: "#RRGGBB"
-  ordem: number;
-  ativo?: boolean;
-  estado?: string;
-  // Outros campos conforme DTOs do backend (ex: StatusPedidoResponseDTO, CreateStatusPedidoDTO)
-  codigo?: string; // Exemplo, verificar backend
-  descricao?: string; // Exemplo, verificar backend
-}
-
-export interface CreateStatusPedidoCommand {
-  nome: string;
-  cor: string;
-  ordem: number;
-  codigo?: string;
   descricao?: string;
-  ativo?: boolean;
+  cor?: string;
+  icone?: string;
+  ordem?: number;
+  visivelPortal?: boolean;
+  // Para consistência com outras entidades na UI, podemos adicionar 'estado'
+  estado?: 'ATIVO' | 'INATIVO'; // Derivado de visivelPortal ou outra lógica de ativação
 }
 
+/**
+ * DTO para criar um novo Status de Pedido.
+ * Baseado em CreateStatusPedidoDTO.java
+ */
+export interface CreateStatusPedidoCommand {
+  codigo: string;
+  nome: string;
+  descricao?: string;
+  cor?: string;
+  icone?: string;
+  ordem?: number;
+  visivelPortal: boolean; // Obrigatório no backend DTO
+}
+
+/**
+ * Comando para atualizar um Status de Pedido.
+ * Baseado em UpdateStatusPedidoCommand.java (que tem campos individuais)
+ */
 export interface UpdateStatusPedidoCommand {
-  statusPedidoId: string;
-  // Similar aos outros, pode encapsular o DTO de criação
-  criarStatusPedido: CreateStatusPedidoCommand; // Ou campos individuais opcionais
+  id: number; // ID do status a ser atualizado
+  codigo?: string;
+  nome?: string;
+  descricao?: string;
+  cor?: string;
+  icone?: string;
+  ordem?: number;
+  visivelPortal?: boolean;
 }
 
-export interface WrapperListaStatusPedidoDTO {
-  content: StatusPedido[];
-  totalPages?: number;
-  totalElements?: number;
-  // ... outros campos de PageDTO
+/**
+ * Representa a estrutura de página do Spring Data Page<StatusPedidoResponseDTO>.
+ */
+export interface PageStatusPedidoResponse {
+  content: StatusPedido[]; // StatusPedidoResponseDTO mapeado para nossa interface StatusPedido
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number; // current page number (0-indexed)
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+  numberOfElements?: number;
+  // Adicionar outros campos de Pageable se necessário (sort, pageable, etc.)
+  // sort?: { sorted: boolean; unsorted: boolean; empty: boolean };
+  // pageable?: { offset: number; pageNumber: number; pageSize: number; paged: boolean; unpaged: boolean; };
 }
