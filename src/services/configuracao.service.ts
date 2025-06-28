@@ -123,11 +123,96 @@ export async function inativarCategoriaServico(categoriaServicoId: string): Prom
 
 
 // === TIPOS DE SERVIÇOS (CUF15) - Placeholders ===
-// export async function getTiposServicos(params): Promise<WrapperListaTipoServicoDTO> {}
-// export async function getTipoServicoById(id: string): Promise<TipoServico> {}
-// export async function createTipoServico(data: CreateTiposServicosCommand): Promise<TipoServico> {}
-// export async function updateTipoServico(id: string, data: UpdateTiposServicosCommand): Promise<TipoServico> {}
-// export async function deleteTipoServico(id: string): Promise<void> {} // Ou inativar
+// === TIPOS DE SERVIÇOS (CUF15) ===
+
+export async function getTiposServicos(
+  nome?: string,
+  codigo?: string,
+  categoriaId?: string,
+  pagina: number = 0,
+  tamanho: number = 20
+): Promise<WrapperListaTipoServicoDTO> {
+  const queryParams = new URLSearchParams();
+  if (nome) queryParams.append('nome', nome);
+  if (codigo) queryParams.append('codigo', codigo);
+  if (categoriaId) queryParams.append('categoriaId', categoriaId);
+  queryParams.append('pagina', pagina.toString());
+  queryParams.append('tamanho', tamanho.toString());
+
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/tiposervico?${queryParams.toString()}`);
+  if (!response.ok) {
+    throw new Error('Falha ao buscar tipos de serviços');
+  }
+  return response.json();
+}
+
+export async function getTipoServicoById(tipoServicoId: string): Promise<TipoServico> {
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/tiposervico/${tipoServicoId}`);
+  if (!response.ok) {
+    throw new Error(`Falha ao buscar tipo de serviço com ID ${tipoServicoId}`);
+  }
+  const dto: any = await response.json();
+  // Mapear para a interface TipoServico do frontend, especialmente o campo 'categoria' e 'estado'
+  return {
+    ...dto,
+    tipoServicoId: dto.id?.toString(), // Assumindo que o ID principal para URLs é o 'id' convertido para string
+    idCategoria: dto.categoriaId, // O backend TiposServicosResponseDTO já tem categoriaId (String)
+                                  // ListaTipoServicoDTO tem 'categoria' (String nome).
+                                  // Precisamos garantir que o formulário use 'categoriaId' (String).
+    estado: dto.ativo ? "ATIVO" : "INATIVO",
+    // O backend TiposServicosResponseDTO não tem o nome da categoria, apenas o ID.
+    // Se precisarmos do nome da categoria no formulário de edição (ex: para exibir),
+    // teremos que buscar as categorias separadamente ou o backend teria que incluir o nome.
+    // ListaTipoServicoDTO tem `categoria` (nome), então para a tabela está ok.
+  } as TipoServico;
+}
+
+export async function createTipoServico(data: CreateTiposServicosCommand): Promise<any> { // Backend retorna Map<String, ?>
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/tiposervico`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) { // 201 é OK
+    const errorBody = await response.json().catch(() => ({ message: 'Erro desconhecido ao criar tipo de serviço.' }));
+    throw new Error(errorBody.message || `Falha ao criar tipo de serviço. Status: ${response.status}`);
+  }
+  return response.json();
+}
+
+export async function updateTipoServico(
+  tipoServicoId: string,
+  commandData: UpdateTiposServicosCommand
+): Promise<TipoServico> { // Backend retorna TiposServicosResponseDTO
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/tiposervico/${tipoServicoId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(commandData.criartiposservicos), // Controller espera CriarTiposServicosDTO
+  });
+  if (!response.ok) { // Backend retorna 201 para PUT neste controller
+    const errorBody = await response.json().catch(() => ({ message: 'Erro desconhecido ao atualizar tipo de serviço.' }));
+    throw new Error(errorBody.message || `Falha ao atualizar tipo de serviço. Status: ${response.status}`);
+  }
+  const dto: any = await response.json();
+   return {
+    ...dto,
+    tipoServicoId: dto.id?.toString(),
+    idCategoria: dto.categoriaId,
+    estado: dto.ativo ? "ATIVO" : "INATIVO",
+  } as TipoServico;
+}
+
+export async function inativarTipoServico(tipoServicoId: string): Promise<any> { // Backend retorna Map<String, ?>
+  const response = await fetch(`${API_BASE_URL}/configuracoes/v1/tiposervico/${tipoServicoId}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({ message: 'Erro desconhecido ao inativar tipo de serviço.' }));
+    throw new Error(errorBody.message || `Falha ao inativar tipo de serviço. Status: ${response.status}`);
+  }
+  return response.json();
+}
+
 
 // === STATUS DE PEDIDOS (CUF16) - Placeholders ===
 // export async function getStatusPedidos(params): Promise<WrapperListaStatusPedidoDTO> {}

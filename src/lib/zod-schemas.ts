@@ -20,14 +20,20 @@ export type CategoriaServicoFormValues = z.infer<typeof CategoriaServicoFormSche
 
 
 // --- TIPOS DE SERVIÇOS (CUF15) ---
-// Baseado em CriarTiposServicosDTO e UpdateTipoServicoCommand do backend
+// Baseado em CriarTiposServicosDTO do backend
 export const TipoServicoFormSchema = z.object({
   nome: z.string().min(3, { message: "O nome deve ter pelo menos 3 caracteres." })
     .max(100, { message: "O nome não pode ter mais de 100 caracteres." }),
-  idCategoria: z.string().uuid({ message: "Selecione uma categoria válida." }), // Supondo que o ID da categoria seja UUID
-  codigo: z.string().min(1, { message: "O código é obrigatório." })
-    .max(50, { message: "O código não pode ter mais de 50 caracteres." }).optional().or(z.literal('')),
+  codigo: z.string().min(2, { message: "O código deve ter pelo menos 2 caracteres." })
+    .max(20, { message: "O código não pode ter mais de 20 caracteres." }),
+  categoriaId: z.string().min(1, {message: "A categoria é obrigatória."}), // ID da CategoriaServico. Pode ser UUID ou outro formato de string.
   descricao: z.string().max(255, { message: "A descrição não pode ter mais de 255 caracteres." }).optional().or(z.literal('')),
+  prazoEstimado: z.number().int().min(0, { message: "O prazo estimado deve ser um número positivo." }).optional().nullable(),
+  valorBase: z.number().min(0, { message: "O valor base deve ser um número positivo." }).optional().nullable(),
+  requerVistoria: z.boolean().optional(),
+  requerAnaliseTec: z.boolean().optional(),
+  requerAprovacao: z.boolean().optional(),
+  disponivelPortal: z.boolean().optional(),
   ativo: z.boolean().optional(),
 });
 export type TipoServicoFormValues = z.infer<typeof TipoServicoFormSchema>;

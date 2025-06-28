@@ -76,30 +76,56 @@ export interface TipoServico {
   idCategoria?: string; // Para envio no formulário, se não aninhado
   ativo?: boolean;
   estado?: string;
-  // Outros campos conforme DTOs do backend (ex: TiposServicosResponseDTO, CriarTiposServicosDTO)
-  codigo?: string; // Exemplo, verificar backend
-  descricao?: string; // Exemplo, verificar backend
+  codigo: string;
+  descricao?: string;
+  prazoEstimado?: number;
+  valorBase?: number;
+  requerVistoria?: boolean;
+  requerAnaliseTec?: boolean;
+  requerAprovacao?: boolean;
+  disponivelPortal?: boolean;
 }
 
+/**
+ * DTO para criar um novo Tipo de Serviço.
+ * Baseado em CriarTiposServicosDTO.java
+ */
 export interface CreateTiposServicosCommand {
+  categoriaId: string; // No backend é categoriaId
+  codigo: string;
   nome: string;
-  idCategoria: string; // ID da CategoriaServico associada
-  codigo?: string;
   descricao?: string;
+  prazoEstimado?: number;
+  valorBase?: number;
+  requerVistoria?: boolean;
+  requerAnaliseTec?: boolean;
+  requerAprovacao?: boolean;
+  disponivelPortal?: boolean;
   ativo?: boolean;
 }
 
+/**
+ * Comando para atualizar um Tipo de Serviço.
+ * Baseado em UpdateTipoServicoCommand.java
+ */
 export interface UpdateTiposServicosCommand {
-  tipoServicoId: string;
-  // Similar ao UpdateCategoria, pode encapsular o DTO de criação
-  criarTiposServicos: CreateTiposServicosCommand; // Ou campos individuais opcionais
+  tipoServicoId: string; // ID do tipo de serviço a ser atualizado
+  criartiposservicos: CreateTiposServicosCommand; // Todos os campos são reenviados
 }
 
+/**
+ * Wrapper para a lista paginada de Tipos de Serviço.
+ * Baseado em WrapperListaTipoServicoDTO.java
+ */
 export interface WrapperListaTipoServicoDTO {
-  content: TipoServico[];
+  content: TipoServico[]; // Ajustado para usar a interface TipoServico unificada
   totalPages?: number;
   totalElements?: number;
-  // ... outros campos de PageDTO
+  size?: number;
+  number?: number;
+  first?: boolean;
+  last?: boolean;
+  empty?: boolean;
 }
 
 
