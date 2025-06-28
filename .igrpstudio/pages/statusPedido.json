@@ -1,0 +1,11 @@
+{
+    "type": "page",
+    "pageName": "statuspedido",
+    "path": "statuspedido",
+    "description": "Status Pedido",
+    "forceDynamic": false,
+    "id": "4uxtm4xxkr",
+    "types": [],
+    "states": [],
+    "functions": []
+}

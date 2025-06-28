@@ -1,0 +1,22 @@
+{
+    "type": "component",
+    "scope": "page",
+    "pagePath": "(tiposervicos)/tiposservicos",
+    "pageName": "tiposServicos",
+    "description": "tipoServicoComp",
+    "name": "tipoServicoComp",
+    "id": "qg4nmgthyd",
+    "args": [
+        {
+            "id": "1",
+            "name": "id",
+            "type": "string",
+            "isList": false,
+            "isOptional": true,
+            "isInterface": false,
+            "isFunction": false,
+            "isState": false,
+            "functionParameters": []
+        }
+    ]
+}

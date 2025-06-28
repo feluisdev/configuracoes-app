@@ -1,0 +1,405 @@
+{
+    "type": "component",
+    "scope": "page",
+    "pagePath": "categorias",
+    "pageName": "categorias",
+    "description": "categoriaForm",
+    "name": "categoriaForm",
+    "id": "2q47kr4n17",
+    "args": [
+        {
+            "id": "1",
+            "name": "{{id}}",
+            "type": "string",
+            "isList": false,
+            "isOptional": true,
+            "isInterface": false,
+            "isFunction": false,
+            "isState": false,
+            "functionParameters": []
+        }
+    ],
+    "components": {
+        "id": "component_yivoau",
+        "componentName": "component",
+        "label": "component",
+        "properties": {
+            "commonProperties": {}
+        },
+        "children": [
+            {
+                "id": "form_vvh6sf",
+                "tag": "form1",
+                "componentName": "form",
+                "label": "Form",
+                "type": "group",
+                "children": [
+                    {
+                        "id": "columns_tchtbi",
+                        "tag": "columns1",
+                        "componentName": "columns",
+                        "label": "Columns",
+                        "type": "group",
+                        "children": [
+                            {
+                                "id": "column_yqfeij",
+                                "tag": "column1",
+                                "componentName": "column",
+                                "label": "Column",
+                                "children": [
+                                    {
+                                        "id": "inputtext_6r7a8w",
+                                        "tag": "inputText1",
+                                        "componentName": "inputText",
+                                        "label": "Input Text",
+                                        "type": "group",
+                                        "children": [],
+                                        "interactions": {
+                                            "onChange": {
+                                                "type": "function",
+                                                "function": {
+                                                    "type": "function"
+                                                },
+                                                "action": {}
+                                            }
+                                        },
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "label": "Nome ",
+                                            "iconProperties": {
+                                                "showIcon": false
+                                            },
+                                            "required": false,
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            },
+                                            "placeholder": "O Nome da Categoria de serviço"
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "inputtextarea_tyybky",
+                                        "tag": "inputTextarea1",
+                                        "componentName": "inputTextarea",
+                                        "label": "Textarea",
+                                        "type": "group",
+                                        "children": [],
+                                        "interactions": {
+                                            "onChange": {
+                                                "type": "function",
+                                                "function": {
+                                                    "type": "function"
+                                                },
+                                                "action": {}
+                                            }
+                                        },
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "name": "descricao",
+                                            "label": "Descrição",
+                                            "rows": "10",
+                                            "required": false,
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            },
+                                            "placeholder": "Introduza uma descrição para a categoria de serviço"
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "inputhidden_ri626d",
+                                        "tag": "inputHidden1",
+                                        "componentName": "inputHidden",
+                                        "label": "Input Hidden",
+                                        "type": "group",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "label": "id",
+                                            "required": false,
+                                            "dataProperties": {
+                                                "isVirtual": true,
+                                                "isType": true
+                                            },
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    }
+                                ],
+                                "interactions": {},
+                                "allowTypes": false,
+                                "data": {},
+                                "properties": {
+                                    "variant": "span6"
+                                }
+                            },
+                            {
+                                "id": "column_2_0zlfuu",
+                                "componentName": "column",
+                                "label": "Column 2",
+                                "properties": {
+                                    "variant": "span6"
+                                },
+                                "children": [
+                                    {
+                                        "id": "columns_l9r3bq",
+                                        "tag": "columns2",
+                                        "componentName": "columns",
+                                        "label": "Columns",
+                                        "type": "group",
+                                        "children": [
+                                            {
+                                                "id": "column_8z2etk",
+                                                "tag": "column2",
+                                                "componentName": "column",
+                                                "label": "Column",
+                                                "children": [
+                                                    {
+                                                        "id": "inputnumber_hjhy3a",
+                                                        "tag": "inputNumber1",
+                                                        "componentName": "inputNumber",
+                                                        "label": "Number",
+                                                        "type": "group",
+                                                        "children": [],
+                                                        "interactions": {
+                                                            "onChange": {
+                                                                "type": "function",
+                                                                "function": {
+                                                                    "type": "function"
+                                                                },
+                                                                "action": {}
+                                                            }
+                                                        },
+                                                        "allowTypes": false,
+                                                        "data": {},
+                                                        "properties": {
+                                                            "label": "Ordem",
+                                                            "name": "number",
+                                                            "max": 9999999,
+                                                            "step": 1,
+                                                            "required": false,
+                                                            "dataProperties": {
+                                                                "isVirtual": false,
+                                                                "isType": true
+                                                            },
+                                                            "commonProperties": {
+                                                                "generateReference": false
+                                                            },
+                                                            "description": "Organize a sua categoria"
+                                                        },
+                                                        "childProperties": {}
+                                                    },
+                                                    {
+                                                        "id": "select_nerrdi",
+                                                        "tag": "select1",
+                                                        "componentName": "select",
+                                                        "label": "Select",
+                                                        "type": "group",
+                                                        "children": [],
+                                                        "interactions": {
+                                                            "onValueChange": {
+                                                                "type": "function",
+                                                                "function": {
+                                                                    "fnCustomSet": "() => {}",
+                                                                    "type": "function"
+                                                                },
+                                                                "action": {}
+                                                            }
+                                                        },
+                                                        "allowTypes": false,
+                                                        "data": {
+                                                            "value": {
+                                                                "state": {
+                                                                    "id": "",
+                                                                    "type": "string",
+                                                                    "name": "select{{id}}Value",
+                                                                    "defaultValue": "{{value}}",
+                                                                    "imports": [],
+                                                                    "generate": true
+                                                                }
+                                                            },
+                                                            "options": {
+                                                                "state": {
+                                                                    "id": "",
+                                                                    "type": "IGRPOptionsProps[]",
+                                                                    "name": "select{{id}}Options",
+                                                                    "defaultValue": "[]",
+                                                                    "imports": [],
+                                                                    "generate": true
+                                                                }
+                                                            }
+                                                        },
+                                                        "properties": {
+                                                            "label": "Ativo?",
+                                                            "placeholder": "Select an option...",
+                                                            "options": [],
+                                                            "gridSize": "full",
+                                                            "dataProperties": {
+                                                                "isVirtual": false,
+                                                                "isType": true
+                                                            },
+                                                            "commonProperties": {
+                                                                "generateReference": false
+                                                            }
+                                                        },
+                                                        "childProperties": {}
+                                                    }
+                                                ],
+                                                "interactions": {},
+                                                "allowTypes": false,
+                                                "data": {},
+                                                "properties": {
+                                                    "variant": "span6"
+                                                }
+                                            },
+                                            {
+                                                "id": "column_2_6jy6i6",
+                                                "componentName": "column",
+                                                "label": "Column 2",
+                                                "properties": {
+                                                    "variant": "span6"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "id": "icon_vnzgie",
+                                                        "tag": "icone",
+                                                        "componentName": "icon",
+                                                        "label": "Icon",
+                                                        "type": "group",
+                                                        "children": [],
+                                                        "interactions": {},
+                                                        "allowTypes": false,
+                                                        "data": {},
+                                                        "properties": {
+                                                            "iconName": "Heart",
+                                                            "size": "24",
+                                                            "commonProperties": {
+                                                                "generateReference": false
+                                                            }
+                                                        },
+                                                        "childProperties": {}
+                                                    },
+                                                    {
+                                                        "id": "inputcolor_rbp0j8",
+                                                        "tag": "inputColor1",
+                                                        "componentName": "inputColor",
+                                                        "label": "Color",
+                                                        "type": "group",
+                                                        "children": [],
+                                                        "interactions": {
+                                                            "onChange": {
+                                                                "type": "function",
+                                                                "function": {
+                                                                    "type": "function"
+                                                                },
+                                                                "action": {}
+                                                            }
+                                                        },
+                                                        "allowTypes": false,
+                                                        "data": {},
+                                                        "properties": {
+                                                            "label": "Cor",
+                                                            "name": "color",
+                                                            "defaultValue": "#000000",
+                                                            "showHexValue": true,
+                                                            "required": false,
+                                                            "dataProperties": {
+                                                                "isVirtual": false,
+                                                                "isType": true
+                                                            },
+                                                            "commonProperties": {
+                                                                "generateReference": false
+                                                            }
+                                                        },
+                                                        "childProperties": {}
+                                                    }
+                                                ],
+                                                "interactions": [],
+                                                "tag": ""
+                                            }
+                                        ],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "variant": "cols12",
+                                            "gap": 4,
+                                            "commonProperties": {}
+                                        }
+                                    }
+                                ],
+                                "interactions": [],
+                                "tag": ""
+                            }
+                        ],
+                        "interactions": {},
+                        "allowTypes": false,
+                        "data": {},
+                        "properties": {
+                            "variant": "cols12",
+                            "gap": 4,
+                            "commonProperties": {}
+                        }
+                    }
+                ],
+                "interactions": {
+                    "onSubmit": {
+                        "type": "function",
+                        "function": {
+                            "fnCustomSet": "(e) => {}",
+                            "type": "function"
+                        },
+                        "action": {}
+                    }
+                },
+                "allowTypes": true,
+                "data": {
+                    "defaultValues": {
+                        "state": {
+                            "id": "",
+                            "type": "z.infer<{{type}}ZodType>",
+                            "name": "contentForm{{id}}",
+                            "defaultValue": "null",
+                            "imports": [],
+                            "generate": true
+                        }
+                    }
+                },
+                "properties": {
+                    "validationMode": "onBlur",
+                    "gridClassName": "flex flex-col",
+                    "commonProperties": {}
+                }
+            }
+        ],
+        "tag": "component1",
+        "data": {},
+        "interactions": {
+            "onLoad": {
+                "type": "function",
+                "function": {
+                    "type": "function"
+                },
+                "action": {}
+            }
+        }
+    },
+    "functions": [],
+    "types": [],
+    "states": [],
+    "imports": []
+}

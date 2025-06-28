@@ -1,0 +1,12 @@
+{
+    "type": "page",
+    "pageName": "novoTipoServico",
+    "path": "tiposservicos/novo",
+    "description": "Novo Tipo Serviço",
+    "forceDynamic": false,
+    "id": "1iye7hymbj",
+    "types": [],
+    "states": [],
+    "functions": [],
+    "parentName": "tiposServicos"
+}

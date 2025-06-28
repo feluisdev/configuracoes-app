@@ -1,0 +1,125 @@
+{
+    "type": "page",
+    "pageName": "editarTipoServico",
+    "path": "tiposservicos/[id]/editar",
+    "description": "Editar Tipo Serviço",
+    "forceDynamic": false,
+    "id": "nt51n72yks",
+    "types": [],
+    "states": [],
+    "functions": [],
+    "parentName": "tiposServicos",
+    "components": {
+        "id": "page_13jnct",
+        "componentName": "page",
+        "label": "page",
+        "properties": {
+            "variant": "default",
+            "commonProperties": {}
+        },
+        "children": [
+            {
+                "id": "section_si2kc4",
+                "componentName": "section",
+                "label": "section",
+                "properties": {
+                    "spaceX": "6",
+                    "spaceY": "6",
+                    "commonProperties": {}
+                },
+                "children": [
+                    {
+                        "id": "form_5tntht",
+                        "tag": "form1",
+                        "componentName": "form",
+                        "label": "Form",
+                        "type": "group",
+                        "children": [
+                            {
+                                "id": "grid_jpqsck",
+                                "tag": "grid1",
+                                "componentName": "grid",
+                                "label": "Grid",
+                                "children": [
+                                    {
+                                        "id": "tiposervicocomp_6qmtd0",
+                                        "tag": "TipoServicoComp1",
+                                        "componentName": "TipoServicoComp",
+                                        "label": "tipoServicoComp",
+                                        "type": "group",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "customProperties": {}
+                                        }
+                                    }
+                                ],
+                                "interactions": {},
+                                "allowTypes": false,
+                                "data": {},
+                                "properties": {
+                                    "gap": "1",
+                                    "variant": {
+                                        "default": "cols4"
+                                    },
+                                    "commonProperties": {
+                                        "generateReference": false
+                                    }
+                                },
+                                "childProperties": {
+                                    "className": "col-span-1"
+                                },
+                                "style": {}
+                            }
+                        ],
+                        "interactions": {
+                            "onSubmit": {
+                                "type": "function",
+                                "function": {
+                                    "fnCustomSet": "(e) => {}",
+                                    "type": "function"
+                                },
+                                "action": {}
+                            }
+                        },
+                        "allowTypes": true,
+                        "data": {
+                            "defaultValues": {
+                                "state": {
+                                    "id": "",
+                                    "type": "z.infer<{{type}}ZodType>",
+                                    "name": "contentForm{{id}}",
+                                    "defaultValue": "null",
+                                    "imports": [],
+                                    "generate": true
+                                }
+                            }
+                        },
+                        "properties": {
+                            "validationMode": "onBlur",
+                            "gridClassName": "grid grid-cols-4",
+                            "commonProperties": {}
+                        }
+                    }
+                ],
+                "tag": "section1",
+                "data": {},
+                "interactions": {}
+            }
+        ],
+        "tag": "page1",
+        "data": {},
+        "interactions": {
+            "onLoad": {
+                "type": "function",
+                "function": {
+                    "type": "function"
+                },
+                "action": {}
+            }
+        }
+    },
+    "imports": []
+}

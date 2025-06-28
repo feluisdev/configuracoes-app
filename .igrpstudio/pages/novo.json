@@ -1,0 +1,12 @@
+{
+    "type": "page",
+    "pageName": "novo",
+    "path": "tiposservicos/novo",
+    "description": "novo",
+    "forceDynamic": false,
+    "id": "05srgj25pt",
+    "types": [],
+    "states": [],
+    "functions": [],
+    "parentName": "tIposServicos"
+}
