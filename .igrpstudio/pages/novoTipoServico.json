@@ -5,6 +5,9 @@
     "description": "Novo Tipo de Serviço",
     "id": "novoTipoServicoPage",
     "parentName": "tiposServicos",
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "page_novo_ts",
         "componentName": "page",

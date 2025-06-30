@@ -4,6 +4,9 @@
     "path": "configuracoes/tipos-servicos",
     "description": "Gestão de Tipos de Serviços",
     "id": "tiposServicosListPage",
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "page_ts_list",
         "componentName": "page",

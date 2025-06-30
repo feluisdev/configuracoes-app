@@ -5,6 +5,9 @@
     "description": "Editar Status de Pedido",
     "id": "editarStatusPedidoPage",
     "parentName": "statusPedidos",
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "page_editar_sp",
         "componentName": "page",

@@ -5,6 +5,9 @@
     "description": "Novo Status de Pedido",
     "id": "novoStatusPedidoPage",
     "parentName": "statusPedidos",
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "page_novo_sp",
         "componentName": "page",

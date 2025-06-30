@@ -4,6 +4,9 @@
     "path": "configuracoes/status-pedidos",
     "description": "Gestão de Status de Pedidos",
     "id": "statusPedidosListPage",
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "page_sp_list",
         "componentName": "page",
@@ -55,7 +58,6 @@
                                                         "componentName": "tableLinkDropdownItem",
                                                         "properties": { "labelTrigger": "Editar", "iconProperties": { "iconName": "SquarePen", "showIcon": true }, "href": "configuracoes/status-pedidos/[id]/editar", "segments": [{"name": "[id]", "tag": "id_col_sp_ref"}] }
                                                     }
-                                                    // Ação Ativar/Inativar (Tornar Visível/Não Visível)
                                                 ]
                                             }
                                         ]

@@ -5,6 +5,9 @@
     "description": "Editar Tipo de Serviço",
     "id": "editarTipoServicoPage",
     "parentName": "tiposServicos",
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "page_editar_ts",
         "componentName": "page",

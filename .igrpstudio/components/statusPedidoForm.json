@@ -11,6 +11,9 @@
             "isOptional": true
         }
     ],
+    "types": [],
+    "states": [],
+    "functions": [],
     "components": {
         "id": "component_statusPedidoForm",
         "componentName": "component",
