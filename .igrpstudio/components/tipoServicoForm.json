@@ -1,0 +1,109 @@
+{
+    "type": "component",
+    "scope": "page",
+    "name": "TipoServicoForm",
+    "id": "tipoServicoFormComp",
+    "args": [
+        {
+            "id": "1",
+            "name": "{{id}}",
+            "type": "string",
+            "isOptional": true
+        }
+    ],
+    "components": {
+        "id": "component_tipoServicoForm",
+        "componentName": "component",
+        "label": "TipoServicoForm",
+        "properties": {},
+        "children": [
+            {
+                "id": "form_tipoServico",
+                "tag": "formTipoServico",
+                "componentName": "form",
+                "label": "Formulário de Tipo de Serviço",
+                "properties": {
+                    "validationMode": "onBlur",
+                    "gridClassName": "flex flex-col"
+                },
+                "children": [
+                    {
+                        "id": "columns_tipoServico",
+                        "componentName": "columns",
+                        "properties": {"variant": "cols12", "gap": 4},
+                        "children": [
+                            {
+                                "id": "col1_tipoServico",
+                                "componentName": "column",
+                                "properties": {"variant": "span6"},
+                                "children": [
+                                    {
+                                        "id": "nome_ts",
+                                        "tag": "nome",
+                                        "componentName": "inputText",
+                                        "properties": { "label": "Nome *", "name": "nome", "placeholder": "Nome do Tipo de Serviço", "required": true }
+                                    },
+                                    {
+                                        "id": "codigo_ts",
+                                        "tag": "codigo",
+                                        "componentName": "inputText",
+                                        "properties": { "label": "Código *", "name": "codigo", "placeholder": "Código do Tipo de Serviço", "required": true }
+                                    },
+                                    {
+                                        "id": "categoriaId_ts",
+                                        "tag": "categoriaId",
+                                        "componentName": "select",
+                                        "properties": {
+                                            "label": "Categoria *",
+                                            "name": "categoriaId",
+                                            "placeholder": "Selecione uma categoria",
+                                            "required": true
+                                        },
+                                        "data": {
+                                            "options": { "state": { "name": "selectCategoriaOptions", "type": "IGRPOptionsProps[]", "defaultValue": "[]", "generate": true } },
+                                            "value": { "state": { "name": "selectCategoriaValue", "type": "string", "defaultValue": "", "generate": true } }
+                                        }
+                                    },
+                                    {
+                                        "id": "descricao_ts",
+                                        "tag": "descricao",
+                                        "componentName": "inputTextarea",
+                                        "properties": { "label": "Descrição", "name": "descricao", "rows": 5 }
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "col2_tipoServico",
+                                "componentName": "column",
+                                "properties": {"variant": "span6"},
+                                "children": [
+                                    {
+                                        "id": "prazoEstimado_ts",
+                                        "tag": "prazoEstimado",
+                                        "componentName": "inputNumber",
+                                        "properties": { "label": "Prazo Estimado (dias)", "name": "prazoEstimado", "min": 0 }
+                                    },
+                                    {
+                                        "id": "valorBase_ts",
+                                        "tag": "valorBase",
+                                        "componentName": "inputNumber",
+                                        "properties": { "label": "Valor Base (€)", "name": "valorBase", "step": 0.01, "min": 0 }
+                                    },
+                                    {"id": "requerVistoria_ts", "tag": "requerVistoria", "componentName": "select", "properties": {"label": "Requer Vistoria?", "name": "requerVistoria"}, "data": { "options": { "state": { "name": "requerVistoriaOptions", "type": "IGRPOptionsProps[]", "defaultValue": "[{\"label\":\"Sim\",\"value\":\"true\"},{\"label\":\"Não\",\"value\":\"false\"}]", "generate": true } }, "value": { "state": { "name": "requerVistoriaValue", "type": "string", "defaultValue": "false", "generate": true } } } },
+                                    {"id": "requerAnaliseTec_ts", "tag": "requerAnaliseTec", "componentName": "select", "properties": {"label": "Requer Análise Técnica?", "name": "requerAnaliseTec"}, "data": { "options": { "state": { "name": "requerAnaliseTecOptions", "type": "IGRPOptionsProps[]", "defaultValue": "[{\"label\":\"Sim\",\"value\":\"true\"},{\"label\":\"Não\",\"value\":\"false\"}]", "generate": true } }, "value": { "state": { "name": "requerAnaliseTecValue", "type": "string", "defaultValue": "false", "generate": true } } } },
+                                    {"id": "requerAprovacao_ts", "tag": "requerAprovacao", "componentName": "select", "properties": {"label": "Requer Aprovação?", "name": "requerAprovacao"}, "data": { "options": { "state": { "name": "requerAprovacaoOptions", "type": "IGRPOptionsProps[]", "defaultValue": "[{\"label\":\"Sim\",\"value\":\"true\"},{\"label\":\"Não\",\"value\":\"false\"}]", "generate": true } }, "value": { "state": { "name": "requerAprovacaoValue", "type": "string", "defaultValue": "false", "generate": true } } } },
+                                    {"id": "disponivelPortal_ts", "tag": "disponivelPortal", "componentName": "select", "properties": {"label": "Disponível no Portal?", "name": "disponivelPortal"}, "data": { "options": { "state": { "name": "disponivelPortalOptions", "type": "IGRPOptionsProps[]", "defaultValue": "[{\"label\":\"Sim\",\"value\":\"true\"},{\"label\":\"Não\",\"value\":\"false\"}]", "generate": true } }, "value": { "state": { "name": "disponivelPortalValue", "type": "string", "defaultValue": "true", "generate": true } } } },
+                                    {"id": "ativo_ts", "tag": "ativo", "componentName": "select", "properties": {"label": "Ativo?", "name": "ativo"}, "data": { "options": { "state": { "name": "ativoOptionsTS", "type": "IGRPOptionsProps[]", "defaultValue": "[{\"label\":\"Sim\",\"value\":\"true\"},{\"label\":\"Não\",\"value\":\"false\"}]", "generate": true } }, "value": { "state": { "name": "ativoValueTS", "type": "string", "defaultValue": "true", "generate": true } } } }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "data": {
+                    "defaultValues": { "state": { "name": "contentFormTipoServico", "type": "any", "defaultValue": "null", "generate": true } }
+                },
+                "interactions": { "onSubmit": { "type": "function", "function": { "fnCustomSet": "(e) => {}", "type": "function" } } }
+            }
+        ]
+    }
+}

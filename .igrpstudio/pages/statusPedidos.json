@@ -1,0 +1,77 @@
+{
+    "type": "page",
+    "pageName": "statusPedidos",
+    "path": "configuracoes/status-pedidos",
+    "description": "Gestão de Status de Pedidos",
+    "id": "statusPedidosListPage",
+    "components": {
+        "id": "page_sp_list",
+        "componentName": "page",
+        "properties": {},
+        "children": [
+            {
+                "id": "section_sp_list",
+                "componentName": "section",
+                "properties": {"spaceY": "6"},
+                "children": [
+                    {
+                        "id": "pageheader_sp_list",
+                        "componentName": "pageHeader",
+                        "properties": {
+                            "title": "Gerenciar Status de Pedidos",
+                            "description": "Crie, edite e gerencie os status dos pedidos."
+                        },
+                        "children": [
+                            {
+                                "id": "btn_novo_sp",
+                                "componentName": "button",
+                                "properties": { "content": "Novo Status de Pedido", "variant": "default", "iconProperties": { "showIcon": true, "iconName": "SquarePlus" } },
+                                "interactions": { "onClick": { "type": "navigate", "navigate": { "path": "configuracoes/status-pedidos/novo" } } }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "table_sp",
+                        "componentName": "table",
+                        "tag": "tableStatusPedidos",
+                        "properties": { "showFilter": true, "showToggleColumn": true },
+                        "data": { "data": { "state": { "name": "contentTableStatusPedidos", "type": "any[]", "defaultValue": "[]", "generate": true } } },
+                        "children": [
+                            {
+                                "id": "tablecolumns_sp",
+                                "componentName": "tableColumns",
+                                "children": [
+                                    {
+                                        "id": "actions_sp_col",
+                                        "componentName": "tableActionListCell",
+                                        "properties": { "headerTitle": "Ações" },
+                                        "children": [
+                                            {
+                                                "id": "dropdown_actions_sp",
+                                                "componentName": "tableDropdownMenuCell",
+                                                "children": [
+                                                    {
+                                                        "id": "edit_link_sp",
+                                                        "componentName": "tableLinkDropdownItem",
+                                                        "properties": { "labelTrigger": "Editar", "iconProperties": { "iconName": "SquarePen", "showIcon": true }, "href": "configuracoes/status-pedidos/[id]/editar", "segments": [{"name": "[id]", "tag": "id_col_sp_ref"}] }
+                                                    }
+                                                    // Ação Ativar/Inativar (Tornar Visível/Não Visível)
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    { "id": "id_col_sp_ref", "componentName": "tableHiddenCell", "properties": { "headerTitle": "ID", "accessorKey": "id" } },
+                                    { "id": "nome_sp_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Nome", "accessorKey": "nome", "headerType": "sortDropdown" } },
+                                    { "id": "codigo_sp_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Código", "accessorKey": "codigo", "headerType": "sortDropdown" } },
+                                    { "id": "cor_sp_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Cor", "accessorKey": "cor" } },
+                                    { "id": "ordem_sp_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Ordem", "accessorKey": "ordem", "headerType": "sortToggle" } },
+                                    { "id": "visivel_sp_col", "componentName": "tableBadgeCell", "properties": { "headerTitle": "Visível no Portal", "accessorKey": "estado" } }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

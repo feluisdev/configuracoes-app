@@ -1,31 +1,31 @@
 {
     "type": "page",
-    "pageName": "novoTipoServico",
-    "path": "configuracoes/tipos-servicos/novo",
-    "description": "Novo Tipo de Serviço",
-    "id": "novoTipoServicoPage",
-    "parentName": "tiposServicos",
+    "pageName": "novoStatusPedido",
+    "path": "configuracoes/status-pedidos/novo",
+    "description": "Novo Status de Pedido",
+    "id": "novoStatusPedidoPage",
+    "parentName": "statusPedidos",
     "components": {
-        "id": "page_novo_ts",
+        "id": "page_novo_sp",
         "componentName": "page",
         "children": [
             {
-                "id": "section_novo_ts",
+                "id": "section_novo_sp",
                 "componentName": "section",
                 "properties": {"spaceY": "6"},
                 "children": [
                     {
-                        "id": "pageheader_novo_ts",
+                        "id": "pageheader_novo_sp",
                         "componentName": "pageHeader",
                         "properties": {
-                            "title": "Novo Tipo de Serviço",
-                            "description": "Registar novo tipo de serviço",
+                            "title": "Novo Status de Pedido",
+                            "description": "Registar novo status de pedido",
                             "showBackButton": true,
-                            "urlBackButton": "configuracoes/tipos-servicos"
+                            "urlBackButton": "configuracoes/status-pedidos"
                         },
                         "children": [
                             {
-                                "id": "btn_gravar_ts",
+                                "id": "btn_gravar_sp",
                                 "componentName": "button",
                                 "properties": { "content": "Gravar", "variant": "default", "iconProperties": { "showIcon": true, "iconName": "Save" } },
                                 "interactions": { "onClick": { "type": "function", "function": { "fnCustomSet": "() => {}", "type": "function" } } }
@@ -33,8 +33,8 @@
                         ]
                     },
                     {
-                        "id": "form_comp_novo_ts",
-                        "componentName": "TipoServicoForm",
+                        "id": "form_comp_novo_sp",
+                        "componentName": "StatusPedidoForm",
                         "properties": {}
                     }
                 ]

@@ -1,0 +1,105 @@
+{
+    "type": "component",
+    "scope": "page",
+    "name": "StatusPedidoForm",
+    "id": "statusPedidoFormComp",
+    "args": [
+        {
+            "id": "1",
+            "name": "{{id}}",
+            "type": "number",
+            "isOptional": true
+        }
+    ],
+    "components": {
+        "id": "component_statusPedidoForm",
+        "componentName": "component",
+        "label": "StatusPedidoForm",
+        "properties": {},
+        "children": [
+            {
+                "id": "form_statusPedido",
+                "tag": "formStatusPedido",
+                "componentName": "form",
+                "label": "Formulário de Status de Pedido",
+                "properties": {
+                    "validationMode": "onBlur",
+                    "gridClassName": "flex flex-col"
+                },
+                "children": [
+                    {
+                        "id": "columns_statusPedido",
+                        "componentName": "columns",
+                        "properties": {"variant": "cols12", "gap": 4},
+                        "children": [
+                            {
+                                "id": "col1_statusPedido",
+                                "componentName": "column",
+                                "properties": {"variant": "span6"},
+                                "children": [
+                                    {
+                                        "id": "nome_sp",
+                                        "tag": "nome",
+                                        "componentName": "inputText",
+                                        "properties": { "label": "Nome *", "name": "nome", "placeholder": "Nome do Status", "required": true }
+                                    },
+                                    {
+                                        "id": "codigo_sp",
+                                        "tag": "codigo",
+                                        "componentName": "inputText",
+                                        "properties": { "label": "Código *", "name": "codigo", "placeholder": "Código do Status", "required": true }
+                                    },
+                                    {
+                                        "id": "descricao_sp",
+                                        "tag": "descricao",
+                                        "componentName": "inputTextarea",
+                                        "properties": { "label": "Descrição", "name": "descricao", "rows": 3 }
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "col2_statusPedido",
+                                "componentName": "column",
+                                "properties": {"variant": "span6"},
+                                "children": [
+                                    {
+                                        "id": "cor_sp",
+                                        "tag": "cor",
+                                        "componentName": "inputColor",
+                                        "properties": { "label": "Cor", "name": "cor", "defaultValue": "#007bff", "showHexValue": true }
+                                    },
+                                    {
+                                        "id": "icone_sp",
+                                        "tag": "icone",
+                                        "componentName": "inputText",
+                                        "properties": { "label": "Ícone (Font Awesome)", "name": "icone", "placeholder": "Ex: fa-circle-check" }
+                                    },
+                                    {
+                                        "id": "ordem_sp",
+                                        "tag": "ordem",
+                                        "componentName": "inputNumber",
+                                        "properties": { "label": "Ordem", "name": "ordem", "min": 0 }
+                                    },
+                                    {
+                                        "id": "visivelPortal_sp",
+                                        "tag": "visivelPortal",
+                                        "componentName": "select",
+                                        "properties": { "label": "Visível no Portal? *", "name": "visivelPortal", "required": true},
+                                        "data": {
+                                            "options": { "state": { "name": "selectVisivelPortalOptionsSP", "type": "IGRPOptionsProps[]", "defaultValue": "[{\"label\":\"Sim\",\"value\":\"true\"},{\"label\":\"Não\",\"value\":\"false\"}]", "generate": true } },
+                                            "value": { "state": { "name": "selectVisivelPortalValueSP", "type": "string", "defaultValue": "true", "generate": true } }
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "data": {
+                    "defaultValues": { "state": { "name": "contentFormStatusPedido", "type": "any", "defaultValue": "null", "generate": true } }
+                },
+                "interactions": { "onSubmit": { "type": "function", "function": { "fnCustomSet": "(e) => {}", "type": "function" } } }
+            }
+        ]
+    }
+}

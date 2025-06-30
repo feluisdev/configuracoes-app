@@ -1,11 +1,75 @@
 {
     "type": "page",
     "pageName": "tiposServicos",
-    "path": "tiposservicos",
-    "description": "Tipos Serviços",
-    "forceDynamic": false,
-    "id": "4uxtm4xxkr",
-    "types": [],
-    "states": [],
-    "functions": []
+    "path": "configuracoes/tipos-servicos",
+    "description": "Gestão de Tipos de Serviços",
+    "id": "tiposServicosListPage",
+    "components": {
+        "id": "page_ts_list",
+        "componentName": "page",
+        "properties": {},
+        "children": [
+            {
+                "id": "section_ts_list",
+                "componentName": "section",
+                "properties": {"spaceY": "6"},
+                "children": [
+                    {
+                        "id": "pageheader_ts_list",
+                        "componentName": "pageHeader",
+                        "properties": {
+                            "title": "Gerenciar Tipos de Serviços",
+                            "description": "Crie, edite e gerencie os tipos de serviços."
+                        },
+                        "children": [
+                            {
+                                "id": "btn_novo_ts",
+                                "componentName": "button",
+                                "properties": { "content": "Novo Tipo de Serviço", "variant": "default", "iconProperties": { "showIcon": true, "iconName": "SquarePlus" } },
+                                "interactions": { "onClick": { "type": "navigate", "navigate": { "path": "configuracoes/tipos-servicos/novo" } } }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "table_ts",
+                        "componentName": "table",
+                        "tag": "tableTiposServicos",
+                        "properties": { "showFilter": true, "showToggleColumn": true },
+                        "data": { "data": { "state": { "name": "contentTableTiposServicos", "type": "any[]", "defaultValue": "[]", "generate": true } } },
+                        "children": [
+                            {
+                                "id": "tablecolumns_ts",
+                                "componentName": "tableColumns",
+                                "children": [
+                                    {
+                                        "id": "actions_ts_col",
+                                        "componentName": "tableActionListCell",
+                                        "properties": { "headerTitle": "Ações" },
+                                        "children": [
+                                            {
+                                                "id": "dropdown_actions_ts",
+                                                "componentName": "tableDropdownMenuCell",
+                                                "children": [
+                                                    {
+                                                        "id": "edit_link_ts",
+                                                        "componentName": "tableLinkDropdownItem",
+                                                        "properties": { "labelTrigger": "Editar", "iconProperties": { "iconName": "SquarePen", "showIcon": true }, "href": "configuracoes/tipos-servicos/[id]/editar", "segments": [{"name": "[id]", "tag": "tipoServicoId_col_ref"}] }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    { "id": "tipoServicoId_col_ref", "componentName": "tableHiddenCell", "properties": { "headerTitle": "tipoServicoIdRef", "accessorKey": "tipoServicoId" } },
+                                    { "id": "nome_ts_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Nome", "accessorKey": "nome", "headerType": "sortDropdown" } },
+                                    { "id": "codigo_ts_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Código", "accessorKey": "codigo", "headerType": "sortDropdown" } },
+                                    { "id": "categoria_ts_col", "componentName": "tableTextCell", "properties": { "headerTitle": "Categoria", "accessorKey": "categoria.nome" } },
+                                    { "id": "estado_ts_col", "componentName": "tableBadgeCell", "properties": { "headerTitle": "Status", "accessorKey": "estado" } }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 }

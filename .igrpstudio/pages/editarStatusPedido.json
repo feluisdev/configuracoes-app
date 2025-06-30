@@ -1,31 +1,31 @@
 {
     "type": "page",
-    "pageName": "editarTipoServico",
-    "path": "configuracoes/tipos-servicos/[id]/editar",
-    "description": "Editar Tipo de Serviço",
-    "id": "editarTipoServicoPage",
-    "parentName": "tiposServicos",
+    "pageName": "editarStatusPedido",
+    "path": "configuracoes/status-pedidos/[id]/editar",
+    "description": "Editar Status de Pedido",
+    "id": "editarStatusPedidoPage",
+    "parentName": "statusPedidos",
     "components": {
-        "id": "page_editar_ts",
+        "id": "page_editar_sp",
         "componentName": "page",
         "children": [
             {
-                "id": "section_editar_ts",
+                "id": "section_editar_sp",
                 "componentName": "section",
                 "properties": {"spaceY": "6"},
                 "children": [
                     {
-                        "id": "pageheader_editar_ts",
+                        "id": "pageheader_editar_sp",
                         "componentName": "pageHeader",
                         "properties": {
-                            "title": "Editar Tipo de Serviço",
-                            "description": "Atualizar tipo de serviço existente",
+                            "title": "Editar Status de Pedido",
+                            "description": "Atualizar status de pedido existente",
                             "showBackButton": true,
-                            "urlBackButton": "configuracoes/tipos-servicos"
+                            "urlBackButton": "configuracoes/status-pedidos"
                         },
                         "children": [
                             {
-                                "id": "btn_atualizar_ts",
+                                "id": "btn_atualizar_sp",
                                 "componentName": "button",
                                 "properties": { "content": "Atualizar", "variant": "default", "iconProperties": { "showIcon": true, "iconName": "SaveAll" } },
                                 "interactions": { "onClick": { "type": "function", "function": { "fnCustomSet": "() => {}", "type": "function" } } }
@@ -33,8 +33,8 @@
                         ]
                     },
                     {
-                        "id": "form_comp_editar_ts",
-                        "componentName": "TipoServicoForm",
+                        "id": "form_comp_editar_sp",
+                        "componentName": "StatusPedidoForm",
                         "properties": {
                             "customProperties": { "id": "{{routeParams.id}}" }
                         }
