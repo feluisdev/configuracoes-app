@@ -3,68 +3,92 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import CategoriasServicosDataTable from './components/CategoriasServicosDataTable';
 import FormularioCategoriaServico from './components/FormularioCategoriaServico';
-import { Button } from '@/components/ui/Button'; // Supondo que Button venha de ui
-import { Modal } from '@/components/ui/Modal'; // Supondo que Modal venha de ui
+import {
+  IGRPButton,
+  IGRPModalDialog,
+  IGRPModalDialogContent,
+  IGRPModalDialogHeader,
+  IGRPModalDialogTitle,
+  IGRPModalDialogFooter,
+  IGRPModalDialogClose,
+  useIGRPToast,
+  IGRPPageHeader,
+  IGRPAlertDialog,
+  IGRPAlertDialogAction,
+  IGRPAlertDialogCancel,
+  IGRPAlertDialogContent,
+  IGRPAlertDialogDescription,
+  IGRPAlertDialogFooter,
+  IGRPAlertDialogHeader,
+  IGRPAlertDialogTitle,
+  IGRPAlertDialogTrigger,
+} from '@igrp/igrp-framework-react-design-system';
 import { CategoriaServico, CreateCategoriasServicosCommand, UpdateCategoriasServicosCommand } from '@/models/configuracoes.models';
 import { getCategoriasServicos, createCategoriaServico, updateCategoriaServico, inativarCategoriaServico, getCategoriaServicoById } from '@/services/configuracao.service';
-import { useModal } from '@/hooks/useModal';
-import FeedbackMessage from '@/components/shared/FeedbackMessage';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import ConfirmacaoDialog from '@/components/shared/ConfirmacaoDialog';
+import { useModal } from '@/hooks/useModal'; // Mantemos para controle simples de visibilidade, IGRPModalDialog controla o seu próprio estado de abertura via props ou trigger
+import LoadingSpinner from '@/components/shared/LoadingSpinner'; // Pode ser substituído por um spinner do IGRP-DS se disponível e preferido
 
 
 export default function PaginaCategoriasServicos() {
   const [categorias, setCategorias] = useState<CategoriaServico[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<CategoriaServico | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // Loading geral da página/ações principais
-  const [isTableLoading, setIsTableLoading] = useState(false); // Loading específico para a tabela
-  const [error, setError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<string | null>(null); // Para mensagens de sucesso
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTableLoading, setIsTableLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null); // Para erros gerais ou de formulário se não tratados no local
 
-  const { isOpen: isFormModalOpen, openModal: openFormModal, closeModal: closeFormModal } = useModal();
-  const { isOpen: isConfirmModalOpen, openModal: openConfirmModal, closeModal: closeConfirmModal } = useModal();
+  const { igrpToast } = useIGRPToast();
 
+  // Para o modal de formulário
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+
+  // Para o modal de confirmação (AlertDialog)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [itemParaToggle, setItemParaToggle] = useState<CategoriaServico | null>(null);
 
 
   const carregarCategorias = useCallback(async (showLoadingSpinner = true) => {
     if (showLoadingSpinner) setIsTableLoading(true);
-    setError(null);
+    setError(null); // Limpa erro anterior ao tentar carregar
     try {
-      // A função getCategoriasServicos já retorna WrapperListaCategoriaServicoDTO
       const wrapper = await getCategoriasServicos();
-      // Mapear CategoriaServico[] para incluir 'estado' se não vier do backend assim,
-      // ou ajustar a interface CategoriaServico e o DTO ListaCategoriaDTO no backend.
-      // No nosso caso, ListaCategoriaDTO já tem 'estado'.
-      // CategoriaServicosResponseDTO tem 'ativo' (boolean).
-      // A interface CategoriaServico no frontend tenta unificar isso.
-      // A service getCategoriaServicoById já faz um mapeamento para 'estado'.
-      // Para a lista, o WrapperListaCategoriaServicoDTO usa ListaCategoriaDTO que já tem 'estado'.
       setCategorias(wrapper.content || []);
-      // TODO: Implementar lógica de paginação usando os dados do wrapper (totalPages, totalElements, etc.)
     } catch (err: any) {
-      setError(err.message || 'Falha ao carregar categorias.');
+      const errorMsg = err.message || 'Falha ao carregar categorias.';
+      setError(errorMsg);
+      igrpToast({ title: 'Erro!', description: errorMsg, variant: 'destructive' });
       console.error(err);
     } finally {
       if (showLoadingSpinner) setIsTableLoading(false);
     }
-  }, []);
+  }, [igrpToast]); // Adicionar igrpToast às dependências se usado dentro do callback
 
   useEffect(() => {
     carregarCategorias();
   }, [carregarCategorias]);
 
+  const openFormModal = () => setIsFormModalOpen(true);
+  const closeFormModal = () => {
+    setIsFormModalOpen(false);
+    setCategoriaSelecionada(null); // Limpa seleção ao fechar
+    setError(null); // Limpa erros do formulário ao fechar
+  }
+
+  const openConfirmModal = () => setIsConfirmModalOpen(true);
+  const closeConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    setItemParaToggle(null);
+  }
+
+
   const handleCriar = () => {
     setError(null);
-    setFeedback(null);
     setCategoriaSelecionada(null);
     openFormModal();
   };
 
-  const handleEditar = async (id: string) => { // id aqui é categoriaId (string)
+  const handleEditar = async (id: string) => {
     setIsLoading(true);
     setError(null);
-    setFeedback(null);
     try {
         const categoriaDetalhada = await getCategoriaServicoById(id);
         setCategoriaSelecionada(categoriaDetalhada);
@@ -80,31 +104,31 @@ export default function PaginaCategoriasServicos() {
   const handleSalvar = async (data: CreateCategoriasServicosCommand | UpdateCategoriasServicosCommand) => {
     setIsLoading(true);
     setError(null);
-    setFeedback(null);
     try {
+      let successMessage = "";
       if ('categoriaServicoId' in data && data.categoriaServicoId) {
         await updateCategoriaServico(data.categoriaServicoId, data as UpdateCategoriasServicosCommand);
-        setFeedback("Categoria atualizada com sucesso!");
+        successMessage = "Categoria atualizada com sucesso!";
       } else {
         await createCategoriaServico(data as CreateCategoriasServicosCommand);
-        setFeedback("Categoria criada com sucesso!");
+        successMessage = "Categoria criada com sucesso!";
       }
       closeFormModal();
-      await carregarCategorias(false); // Recarregar lista sem o spinner de tabela inteira
+      igrpToast({ title: 'Sucesso!', description: successMessage, variant: 'success' });
+      await carregarCategorias(false);
     } catch (err: any) {
-      setError(err.message || 'Falha ao salvar categoria.');
+      const errorMsg = err.message || 'Falha ao salvar categoria.';
+      setError(errorMsg); // Erro pode ser exibido no formulário ou como toast
+      igrpToast({ title: 'Erro ao Salvar!', description: errorMsg, variant: 'destructive' });
       console.error(err);
-      // Manter modal aberto em caso de erro para o usuário corrigir
-      return; // Evita fechar o modal e limpar feedback
+      return;
     } finally {
       setIsLoading(false);
     }
-    // Limpar feedback após um tempo se desejar, ou na próxima ação
   };
 
   const handleToggleStatus = (id: string) => {
     setError(null);
-    setFeedback(null);
     const categoria = categorias.find(cat => cat.categoriaId === id);
     if (categoria) {
       setItemParaToggle(categoria);
@@ -117,24 +141,18 @@ export default function PaginaCategoriasServicos() {
 
     setIsLoading(true);
     setError(null);
-    setFeedback(null);
     const atualmenteAtivo = itemParaToggle.estado === 'ATIVO';
+    let successMessage = "";
 
     try {
       if (atualmenteAtivo) {
-        // Inativar via DELETE
         await inativarCategoriaServico(itemParaToggle.categoriaId);
-        setFeedback(`Categoria "${itemParaToggle.nome}" inativada com sucesso!`);
+        successMessage = `Categoria "${itemParaToggle.nome}" inativada com sucesso!`;
       } else {
-        // Ativar via PUT
-        // Precisamos de todos os campos para o CriarCategoriasServicosDTO aninhado
-        // Se a lista não tem todos, buscar o item completo.
-        // No nosso caso, getCategoriaServicoById já retorna o objeto completo.
         let categoriaParaAtivar = itemParaToggle;
         if (!categoriaParaAtivar.descricao || !categoriaParaAtivar.icone || !categoriaParaAtivar.cor || typeof categoriaParaAtivar.ordem === 'undefined') {
              categoriaParaAtivar = await getCategoriaServicoById(itemParaToggle.categoriaId);
         }
-
         const updateCmd: UpdateCategoriasServicosCommand = {
           categoriaServicoId: itemParaToggle.categoriaId,
           criarcategoriasservicos: {
@@ -144,36 +162,41 @@ export default function PaginaCategoriasServicos() {
             icone: categoriaParaAtivar.icone,
             cor: categoriaParaAtivar.cor,
             ordem: categoriaParaAtivar.ordem,
-            ativo: true, // Ativando
+            ativo: true,
           },
         };
         await updateCategoriaServico(itemParaToggle.categoriaId, updateCmd);
-        setFeedback(`Categoria "${itemParaToggle.nome}" ativada com sucesso!`);
+        successMessage = `Categoria "${itemParaToggle.nome}" ativada com sucesso!`;
       }
+      igrpToast({ title: 'Sucesso!', description: successMessage, variant: 'success' });
       await carregarCategorias(false);
     } catch (err: any) {
-      setError(err.message || `Falha ao ${atualmenteAtivo ? 'inativar' : 'ativar'} categoria.`);
+      const errorMsg = err.message || `Falha ao ${atualmenteAtivo ? 'inativar' : 'ativar'} categoria.`;
+      setError(errorMsg);
+      igrpToast({ title: 'Erro!', description: errorMsg, variant: 'destructive' });
       console.error(err);
     } finally {
       setIsLoading(false);
       closeConfirmModal();
-      setItemParaToggle(null);
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Gerenciar Categorias de Serviços</h1>
-        <Button onClick={handleCriar}>
+    <div className="container mx-auto p-4 flex flex-col gap-4">
+      <IGRPPageHeader
+        title="Gerenciar Categorias de Serviços"
+        description="Crie, edite e gerencie as categorias de serviços da aplicação."
+      >
+        <IGRPButton onClick={handleCriar} iconName="SquarePlus" showIcon>
           Nova Categoria
-        </Button>
-      </div>
+        </IGRPButton>
+      </IGRPPageHeader>
 
-      {error && <FeedbackMessage type="error" message={error} className="mb-4" />}
-      {feedback && <FeedbackMessage type="success" message={feedback} className="mb-4" />}
+      {/* Exibição de erro geral da página, se houver. Erros de formulário são tratados localmente ou via toast. */}
+      {error && !isFormModalOpen && <FeedbackMessage type="error" message={error} className="mb-4" />}
 
-      {isTableLoading && !categorias.length ? ( // Mostrar spinner grande se carregando pela primeira vez
+
+      {isTableLoading && !categorias.length ? (
         <div className="flex justify-center items-center h-64">
           <LoadingSpinner size="lg" />
         </div>
@@ -182,31 +205,47 @@ export default function PaginaCategoriasServicos() {
           data={categorias}
           onEdit={handleEditar}
           onToggleStatus={handleToggleStatus}
-          isLoading={isTableLoading} // Spinner menor na tabela para reloads
+          isLoading={isTableLoading}
         />
       )}
 
-      {isFormModalOpen && (
-        <Modal isOpen={isFormModalOpen} onClose={() => { closeFormModal(); setError(null); }} title={categoriaSelecionada ? 'Editar Categoria' : 'Nova Categoria'}>
+      <IGRPModalDialog open={isFormModalOpen} onOpenChange={(isOpen) => !isOpen && closeFormModal()}>
+        <IGRPModalDialogContent>
+          <IGRPModalDialogHeader>
+            <IGRPModalDialogTitle>{categoriaSelecionada ? 'Editar Categoria' : 'Nova Categoria'}</IGRPModalDialogTitle>
+          </IGRPModalDialogHeader>
           <FormularioCategoriaServico
             initialData={categoriaSelecionada}
             onSubmit={handleSalvar}
-            onCancel={() => { closeFormModal(); setError(null); }}
+            onCancel={closeFormModal}
             isLoading={isLoading}
           />
-           {/* Exibir erro do formulário dentro do modal, se houver e não for de submit */}
-        </Modal>
-      )}
+          {/* Erros específicos do formulário podem ser exibidos dentro dele ou via toast */}
+        </IGRPModalDialogContent>
+      </IGRPModalDialog>
 
-      {isConfirmModalOpen && itemParaToggle && (
-        <ConfirmacaoDialog
-          isOpen={isConfirmModalOpen}
-          onClose={() => { closeConfirmModal(); setItemParaToggle(null);}}
-          onConfirm={confirmarToggleStatus}
-          title={`Confirmar ${itemParaToggle.estado === 'ATIVO' ? 'Inativação' : 'Ativação'}`}
-          message={`Tem certeza que deseja ${itemParaToggle.estado === 'ATIVO' ? 'inativar' : 'ativar'} a categoria "${itemParaToggle.nome}"?`}
-          isLoading={isLoading}
-        />
+      {itemParaToggle && (
+        <IGRPAlertDialog open={isConfirmModalOpen} onOpenChange={(isOpen) => !isOpen && closeConfirmModal()}>
+        {/* <IGRPAlertDialogTrigger asChild>
+          // O Trigger pode ser um botão escondido ou a lógica de abertura ser controlada por `isConfirmModalOpen`
+        </IGRPAlertDialogTrigger> */}
+        <IGRPAlertDialogContent>
+          <IGRPAlertDialogHeader>
+            <IGRPAlertDialogTitle>
+              Confirmar {itemParaToggle.estado === 'ATIVO' ? 'Inativação' : 'Ativação'}
+            </IGRPAlertDialogTitle>
+            <IGRPAlertDialogDescription>
+              Tem certeza que deseja {itemParaToggle.estado === 'ATIVO' ? 'inativar' : 'ativar'} a categoria "{itemParaToggle.nome}"?
+            </IGRPAlertDialogDescription>
+          </IGRPAlertDialogHeader>
+          <IGRPAlertDialogFooter>
+            <IGRPAlertDialogCancel onClick={closeConfirmModal} disabled={isLoading}>Cancelar</IGRPAlertDialogCancel>
+            <IGRPAlertDialogAction onClick={confirmarToggleStatus} disabled={isLoading}>
+              {isLoading ? 'Confirmando...' : 'Confirmar'}
+            </IGRPAlertDialogAction>
+          </IGRPAlertDialogFooter>
+        </IGRPAlertDialogContent>
+      </IGRPAlertDialog>
       )}
     </div>
   );

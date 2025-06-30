@@ -1,12 +1,21 @@
 "use client";
 
 import React from 'react';
-import { Modal } from '@/components/ui/Modal'; // Supondo que Modal venha de ui
-import { Button } from '@/components/ui/Button';
+import {
+  IGRPAlertDialog,
+  IGRPAlertDialogAction,
+  IGRPAlertDialogCancel,
+  IGRPAlertDialogContent,
+  IGRPAlertDialogDescription,
+  IGRPAlertDialogFooter,
+  IGRPAlertDialogHeader,
+  IGRPAlertDialogTitle,
+  // IGRPAlertDialogTrigger, // O trigger pode ser externo ao dialog
+} from '@igrp/igrp-framework-react-design-system';
 
 interface ConfirmacaoDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   title: string;
   message: string;
@@ -14,29 +23,33 @@ interface ConfirmacaoDialogProps {
 }
 
 const ConfirmacaoDialog: React.FC<ConfirmacaoDialogProps> = ({
-  isOpen,
-  onClose,
+  open,
+  onOpenChange,
   onConfirm,
   title,
   message,
   isLoading,
 }) => {
-  if (!isOpen) return null;
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title}>
-      <div className="p-4">
-        <p className="mb-6">{message}</p>
-        <div className="flex justify-end space-x-2">
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+    <IGRPAlertDialog open={open} onOpenChange={onOpenChange}>
+      {/* Opcionalmente, um IGRPAlertDialogTrigger poderia estar aqui se o botão de abrir fizesse parte deste componente */}
+      <IGRPAlertDialogContent>
+        <IGRPAlertDialogHeader>
+          <IGRPAlertDialogTitle>{title}</IGRPAlertDialogTitle>
+          <IGRPAlertDialogDescription>
+            {message}
+          </IGRPAlertDialogDescription>
+        </IGRPAlertDialogHeader>
+        <IGRPAlertDialogFooter>
+          <IGRPAlertDialogCancel onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancelar
-          </Button>
-          <Button variant="destructive" onClick={onConfirm} disabled={isLoading}>
+          </IGRPAlertDialogCancel>
+          <IGRPAlertDialogAction onClick={onConfirm} disabled={isLoading}>
             {isLoading ? 'Confirmando...' : 'Confirmar'}
-          </Button>
-        </div>
-      </div>
-    </Modal>
+          </IGRPAlertDialogAction>
+        </IGRPAlertDialogFooter>
+      </IGRPAlertDialogContent>
+    </IGRPAlertDialog>
   );
 };
 

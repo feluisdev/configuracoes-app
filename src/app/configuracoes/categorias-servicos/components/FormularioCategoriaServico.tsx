@@ -5,20 +5,21 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CategoriaServico, CreateCategoriasServicosCommand, UpdateCategoriasServicosCommand } from '@/models/configuracoes.models';
 import { CategoriaServicoFormSchema, CategoriaServicoFormValues } from '@/lib/zod-schemas';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input'; // Supondo Input de ui
-import { Label } from '@/components/ui/Label'; // Supondo Label de ui
-// import { Checkbox } from '@/components/ui/Checkbox'; // Supondo Checkbox de ui
-
-// Mock Checkbox
-const Checkbox: React.FC<any> = ({ checked, onCheckedChange, id, ...props }) => (
-  <input type="checkbox" id={id} checked={checked} onChange={(e) => onCheckedChange(e.target.checked)} {...props} />
-);
-
+import {
+  IGRPButton,
+  IGRPInputText,
+  IGRPLabel,
+  IGRPTextarea,
+  IGRPInputNumber,
+  IGRPInputColor,
+  IGRPIcon,
+  IGRPSelect, // Usaremos IGRPSelect para o campo 'ativo' por enquanto
+  IGRPOptionsProps,
+  // IGRPCheckbox // Se existir um IGRPCheckbox dedicado para formulários, usaríamos aqui
+} from '@igrp/igrp-framework-react-design-system';
 
 interface FormularioCategoriaServicoProps {
-  initialData?: CategoriaServico | null; // CategoriaServico tem 'id' e 'ativo' (boolean)
-                                        // CreateCategoriasServicosCommand tem 'nome', 'codigo', 'ativo' (boolean) etc.
+  initialData?: CategoriaServico | null;
   onSubmit: (data: CreateCategoriasServicosCommand | UpdateCategoriasServicosCommand) => void;
   onCancel: () => void;
   isLoading?: boolean;
@@ -32,18 +33,25 @@ const FormularioCategoriaServico: React.FC<FormularioCategoriaServicoProps> = ({
 }) => {
   const isEditMode = !!initialData?.categoriaId;
 
-  const { control, handleSubmit, reset, formState: { errors }, setValue } = useForm<CategoriaServicoFormValues>({
+  const { control, handleSubmit, reset, formState: { errors }, setValue, watch } = useForm<CategoriaServicoFormValues>({
     resolver: zodResolver(CategoriaServicoFormSchema),
     defaultValues: {
       nome: '',
       codigo: '',
       descricao: '',
       icone: '',
-      cor: '#000000', // Default color
+      cor: '#000000',
       ordem: 0,
-      ativo: true,
+      ativo: true, // Default para criação
     },
   });
+
+  const ativoValue = watch('ativo'); // Para controlar o IGRPSelect
+
+  const statusOptions: IGRPOptionsProps[] = [
+    { label: 'Sim', value: 'true' },
+    { label: 'Não', value: 'false' },
+  ];
 
   useEffect(() => {
     if (initialData) {
@@ -53,38 +61,27 @@ const FormularioCategoriaServico: React.FC<FormularioCategoriaServicoProps> = ({
       setValue('icone', initialData.icone || '');
       setValue('cor', initialData.cor || '#000000');
       setValue('ordem', initialData.ordem || 0);
-      // O campo 'ativo' no DTO de criação/atualização é boolean.
-      // 'initialData.ativo' (boolean) vem do CategoriaServicosResponseDTO (GET by ID)
-      // 'initialData.estado' (string) vem do ListaCategoriaDTO
       const isActive = typeof initialData.ativo === 'boolean' ? initialData.ativo : initialData.estado === 'ATIVO';
       setValue('ativo', isActive);
     } else {
-      reset({ // Valores padrão para novo formulário
-        nome: '',
-        codigo: '',
-        descricao: '',
-        icone: '',
-        cor: '#000000',
-        ordem: 0,
-        ativo: true,
-      });
+      reset(); // Reseta para defaultValues na criação
     }
-  }, [initialData, reset, setValue]);
+  }, [initialData, setValue, reset]);
 
   const handleFormSubmit = (data: CategoriaServicoFormValues) => {
     const commandPayload: CreateCategoriasServicosCommand = {
       nome: data.nome,
       codigo: data.codigo,
-      descricao: data.descricao || undefined, // Enviar undefined se vazio para não enviar string vazia se backend não gostar
+      descricao: data.descricao || undefined,
       icone: data.icone || undefined,
       cor: data.cor || undefined,
-      ordem: data.ordem, // Zod schema já garante que é number
-      ativo: data.ativo === undefined ? true : data.ativo, // Default true se não fornecido
+      ordem: data.ordem,
+      ativo: data.ativo === undefined ? true : Boolean(data.ativo), // Garante boolean
     };
 
     if (isEditMode) {
       const updateCommand: UpdateCategoriasServicosCommand = {
-        categoriaServicoId: initialData!.categoriaId, // initialData e categoriaId são garantidos no modo de edição
+        categoriaServicoId: initialData!.categoriaId,
         criarcategoriasservicos: commandPayload,
       };
       onSubmit(updateCommand);
@@ -96,100 +93,100 @@ const FormularioCategoriaServico: React.FC<FormularioCategoriaServicoProps> = ({
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 p-1">
       <div>
-        <Label htmlFor="nome">Nome *</Label>
+        <IGRPLabel htmlFor="nome">Nome *</IGRPLabel>
         <Controller
           name="nome"
           control={control}
-          render={({ field }) => <Input id="nome" {...field} placeholder="Ex: Manutenção Preventiva" />}
+          render={({ field }) => <IGRPInputText id="nome" {...field} placeholder="Ex: Manutenção Preventiva" />}
         />
         {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="codigo">Código *</Label>
+        <IGRPLabel htmlFor="codigo">Código *</IGRPLabel>
         <Controller
           name="codigo"
           control={control}
-          render={({ field }) => <Input id="codigo" {...field} placeholder="Ex: MAN_PREV_001" />}
+          render={({ field }) => <IGRPInputText id="codigo" {...field} placeholder="Ex: MAN_PREV_001" />}
         />
         {errors.codigo && <p className="text-red-500 text-xs mt-1">{errors.codigo.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="descricao">Descrição</Label>
+        <IGRPLabel htmlFor="descricao">Descrição</IGRPLabel>
         <Controller
           name="descricao"
           control={control}
-          render={({ field }) => <Input id="descricao" {...field} placeholder="Detalhes sobre a categoria" />}
+          render={({ field }) => <IGRPTextarea id="descricao" {...field} placeholder="Detalhes sobre a categoria" />}
         />
         {errors.descricao && <p className="text-red-500 text-xs mt-1">{errors.descricao.message}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
         <div>
-          <Label htmlFor="icone">Ícone (classe CSS ou URL)</Label>
+          <IGRPLabel htmlFor="icone">Ícone (Font Awesome)</IGRPLabel>
           <Controller
             name="icone"
             control={control}
-            render={({ field }) => <Input id="icone" {...field} placeholder="Ex: fa fa-wrench" />}
+            render={({ field }) => <IGRPInputText id="icone" {...field} placeholder="Ex: fa-wrench" />}
           />
           {errors.icone && <p className="text-red-500 text-xs mt-1">{errors.icone.message}</p>}
         </div>
-
-        <div>
-          <Label htmlFor="cor">Cor</Label>
+        {watch("icone") && <IGRPIcon iconName={watch("icone") as any} className="mb-2" size={24} />}
+      </div>
+       <div>
+          <IGRPLabel htmlFor="cor">Cor</IGRPLabel>
           <Controller
             name="cor"
             control={control}
-            render={({ field }) => <Input id="cor" type="color" {...field} className="h-10 p-1" />}
+            render={({ field }) => <IGRPInputColor id="cor" {...field} showHexValue />}
           />
           {errors.cor && <p className="text-red-500 text-xs mt-1">{errors.cor.message}</p>}
         </div>
-      </div>
+
 
       <div>
-        <Label htmlFor="ordem">Ordem de Exibição</Label>
+        <IGRPLabel htmlFor="ordem">Ordem de Exibição</IGRPLabel>
         <Controller
           name="ordem"
           control={control}
-          render={({ field }) => <Input id="ordem" type="number" {...field}
-            onChange={e => field.onChange(e.target.value === '' ? null : parseInt(e.target.value,10))} // Permitir limpar ou setar como null/undefined
-            onBlur={e => { // Garantir que o valor seja 0 se inválido ou vazio ao perder foco, se desejado
-                if (e.target.value === '' || isNaN(parseInt(e.target.value, 10))) {
-                    setValue('ordem', 0);
-                }
-            }}
+          render={({ field }) => <IGRPInputNumber id="ordem" {...field}
+            value={field.value ?? 0} // Ensure value is not null/undefined for IGRPInputNumber
+            onChange={e => field.onChange(e.target.value === '' ? 0 : parseInt(e.target.value,10))}
             placeholder="0"
-            min="0"
-            step="1"
+            min={0}
+            step={1}
             />}
         />
         {errors.ordem && <p className="text-red-500 text-xs mt-1">{errors.ordem.message}</p>}
       </div>
 
-      <div className="flex items-center space-x-2 pt-2">
+       <div>
+        <IGRPLabel htmlFor="ativo">Ativo</IGRPLabel>
         <Controller
           name="ativo"
           control={control}
           render={({ field }) => (
-            <Checkbox
+            <IGRPSelect
               id="ativo"
-              checked={field.value}
-              onCheckedChange={field.onChange}
+              options={statusOptions}
+              value={field.value ? 'true' : 'false'}
+              onValueChange={(val) => field.onChange(val === 'true')}
+              placeholder="Selecione o estado"
             />
           )}
         />
-        <Label htmlFor="ativo" className="mb-0">Ativo</Label>
-        {errors.ativo && <p className="text-red-500 text-xs">{errors.ativo.message}</p>}
+         {errors.ativo && <p className="text-red-500 text-xs mt-1">{errors.ativo.message}</p>}
       </div>
 
+
       <div className="flex justify-end space-x-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+        <IGRPButton type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
           Cancelar
-        </Button>
-        <Button type="submit" disabled={isLoading}>
+        </IGRPButton>
+        <IGRPButton type="submit" disabled={isLoading} iconName={isEditMode ? "Save" : "SquarePlus"} showIcon>
           {isLoading ? 'Salvando...' : (isEditMode ? 'Salvar Alterações' : 'Criar Categoria')}
-        </Button>
+        </IGRPButton>
       </div>
     </form>
   );

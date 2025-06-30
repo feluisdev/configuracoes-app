@@ -5,10 +5,18 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StatusPedido, CreateStatusPedidoCommand, UpdateStatusPedidoCommand } from '@/models/configuracoes.models';
 import { StatusPedidoFormSchema, StatusPedidoFormValues } from '@/lib/zod-schemas';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { Checkbox } from '@/components/ui/Checkbox'; // Supondo que Checkbox venha de ui ou seja um placeholder
+import {
+  IGRPButton,
+  IGRPInputText,
+  IGRPLabel,
+  IGRPTextarea,
+  IGRPInputNumber,
+  IGRPInputColor,
+  IGRPIcon,
+  IGRPSelect,
+  IGRPOptionsProps,
+  // IGRPCheckbox // Se existir
+} from '@igrp/igrp-framework-react-design-system';
 
 interface FormularioStatusPedidoProps {
   initialData?: StatusPedido | null;
@@ -25,7 +33,7 @@ const FormularioStatusPedido: React.FC<FormularioStatusPedidoProps> = ({
 }) => {
   const isEditMode = !!initialData?.id;
 
-  const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm<StatusPedidoFormValues>({
+  const { control, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<StatusPedidoFormValues>({
     resolver: zodResolver(StatusPedidoFormSchema),
     defaultValues: {
       codigo: '',
@@ -34,9 +42,16 @@ const FormularioStatusPedido: React.FC<FormularioStatusPedidoProps> = ({
       cor: '#000000',
       icone: '',
       ordem: 0,
-      visivelPortal: true,
+      visivelPortal: true, // Backend DTO Create tem NotNull para este campo
     },
   });
+
+  const booleanAsSelectOptions: IGRPOptionsProps[] = [
+    { label: 'Sim', value: 'true' },
+    { label: 'Não', value: 'false' },
+  ];
+  const boolToSelectVal = (val: boolean | undefined) => val ? 'true' : 'false';
+  const selectValToBool = (val: string) => val === 'true';
 
   useEffect(() => {
     if (initialData) {
@@ -45,107 +60,111 @@ const FormularioStatusPedido: React.FC<FormularioStatusPedidoProps> = ({
       setValue('descricao', initialData.descricao || '');
       setValue('cor', initialData.cor || '#000000');
       setValue('icone', initialData.icone || '');
-      setValue('ordem', initialData.ordem || 0);
+      setValue('ordem', initialData.ordem ?? null); // Permitir null para o IGRPInputNumber se o schema permitir
       setValue('visivelPortal', initialData.visivelPortal === undefined ? true : initialData.visivelPortal);
     } else {
-      reset(); // Reseta para defaultValues
+      reset();
     }
   }, [initialData, setValue, reset]);
 
   const handleFormSubmit = (data: StatusPedidoFormValues) => {
+    const commandPayload = { // Usado tanto para Create quanto para Update (parcial)
+      codigo: data.codigo,
+      nome: data.nome,
+      descricao: data.descricao || undefined,
+      cor: data.cor || undefined,
+      icone: data.icone || undefined,
+      ordem: data.ordem ?? undefined,
+      visivelPortal: Boolean(data.visivelPortal), // Garante boolean
+    };
+
     if (isEditMode && initialData) {
-      const command: UpdateStatusPedidoCommand = {
-        id: initialData.id, // ID é number
-        codigo: data.codigo,
-        nome: data.nome,
-        descricao: data.descricao || undefined,
-        cor: data.cor || undefined,
-        icone: data.icone || undefined,
-        ordem: data.ordem ?? undefined, // Envia undefined se null, pois no DTO é Integer
-        visivelPortal: data.visivelPortal, // Zod schema tem default, então sempre terá valor
+      const updateCommand: UpdateStatusPedidoCommand = {
+        id: initialData.id,
+        ...commandPayload, // Backend UpdateStatusPedidoCommand aceita campos parciais
       };
-      onSubmit(command);
+      onSubmit(updateCommand);
     } else {
-      const command: CreateStatusPedidoCommand = {
-        codigo: data.codigo,
-        nome: data.nome,
-        descricao: data.descricao || undefined,
-        cor: data.cor || undefined,
-        icone: data.icone || undefined,
-        ordem: data.ordem ?? undefined,
-        visivelPortal: data.visivelPortal,
-      };
-      onSubmit(command);
+      onSubmit(commandPayload as CreateStatusPedidoCommand); // CreateStatusPedidoCommand tem visivelPortal como obrigatório
     }
   };
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 p-1">
       <div>
-        <Label htmlFor="codigo">Código *</Label>
-        <Controller name="codigo" control={control} render={({ field }) => <Input id="codigo" {...field} />} />
+        <IGRPLabel htmlFor="codigo">Código *</IGRPLabel>
+        <Controller name="codigo" control={control} render={({ field }) => <IGRPInputText id="codigo" {...field} />} />
         {errors.codigo && <p className="text-red-500 text-xs mt-1">{errors.codigo.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="nome">Nome *</Label>
-        <Controller name="nome" control={control} render={({ field }) => <Input id="nome" {...field} />} />
+        <IGRPLabel htmlFor="nome">Nome *</IGRPLabel>
+        <Controller name="nome" control={control} render={({ field }) => <IGRPInputText id="nome" {...field} />} />
         {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="descricao">Descrição</Label>
-        <Controller name="descricao" control={control} render={({ field }) => <Input id="descricao" {...field} />} />
+        <IGRPLabel htmlFor="descricao">Descrição</IGRPLabel>
+        <Controller name="descricao" control={control} render={({ field }) => <IGRPTextarea id="descricao" {...field} />} />
         {errors.descricao && <p className="text-red-500 text-xs mt-1">{errors.descricao.message}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
         <div>
-            <Label htmlFor="cor">Cor</Label>
+            <IGRPLabel htmlFor="cor">Cor</IGRPLabel>
             <Controller
                 name="cor"
                 control={control}
-                render={({ field }) => <Input id="cor" type="color" {...field} className="h-10 p-1 w-full" />}
+                render={({ field }) => <IGRPInputColor id="cor" {...field} showHexValue className="h-10 p-1 w-full" />}
             />
             {errors.cor && <p className="text-red-500 text-xs mt-1">{errors.cor.message}</p>}
         </div>
         <div>
-            <Label htmlFor="icone">Ícone (classe CSS)</Label>
-            <Controller name="icone" control={control} render={({ field }) => <Input id="icone" {...field} />} />
+            <IGRPLabel htmlFor="icone">Ícone (Font Awesome)</IGRPLabel>
+            <Controller name="icone" control={control} render={({ field }) => <IGRPInputText id="icone" {...field} placeholder="Ex: fa-check-circle" />} />
             {errors.icone && <p className="text-red-500 text-xs mt-1">{errors.icone.message}</p>}
         </div>
+         {watch("icone") && <IGRPIcon iconName={watch("icone") as any} className="mb-2" size={24} />}
       </div>
 
       <div>
-        <Label htmlFor="ordem">Ordem de Exibição</Label>
+        <IGRPLabel htmlFor="ordem">Ordem de Exibição</IGRPLabel>
         <Controller
             name="ordem"
             control={control}
-            render={({ field }) => <Input id="ordem" type="number" {...field}
+            render={({ field }) => <IGRPInputNumber id="ordem" {...field}
+            value={field.value ?? 0}
             onChange={e => field.onChange(e.target.value === '' ? null : parseInt(e.target.value,10))}
-            min="0"
-            step="1"/>}
+            min={0}
+            step={1}/>}
         />
         {errors.ordem && <p className="text-red-500 text-xs mt-1">{errors.ordem.message}</p>}
       </div>
 
-      <div className="flex items-center space-x-2 pt-2">
-        <Controller
+      <div>
+        <IGRPLabel htmlFor="visivelPortal">Visível no Portal *</IGRPLabel>
+         <Controller
             name="visivelPortal"
             control={control}
-            render={({ field }) => <Checkbox id="visivelPortal" checked={field.value} onCheckedChange={field.onChange} />}
-        />
-        <Label htmlFor="visivelPortal" className="mb-0">Visível no Portal</Label>
+            render={({ field }) => (
+              <IGRPSelect
+                id="visivelPortal"
+                options={booleanAsSelectOptions}
+                value={boolToSelectVal(field.value)}
+                onValueChange={(val) => field.onChange(selectValToBool(val))}
+              />
+            )}
+          />
         {errors.visivelPortal && <p className="text-red-500 text-xs mt-1">{errors.visivelPortal.message}</p>}
       </div>
 
       <div className="flex justify-end space-x-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+        <IGRPButton type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
           Cancelar
-        </Button>
-        <Button type="submit" disabled={isLoading}>
+        </IGRPButton>
+        <IGRPButton type="submit" disabled={isLoading} iconName={isEditMode ? "Save" : "SquarePlus"} showIcon>
           {isLoading ? 'Salvando...' : (isEditMode ? 'Salvar Alterações' : 'Criar Status')}
-        </Button>
+        </IGRPButton>
       </div>
     </form>
   );

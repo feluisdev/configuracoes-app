@@ -3,14 +3,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import StatusPedidosDataTable from './components/StatusPedidosDataTable';
 import FormularioStatusPedido from './components/FormularioStatusPedido';
-import { Button } from '@/components/ui/Button';
-import { Modal } from '@/components/ui/Modal';
+import {
+  IGRPButton,
+  IGRPModalDialog,
+  IGRPModalDialogContent,
+  IGRPModalDialogHeader,
+  IGRPModalDialogTitle,
+  useIGRPToast,
+  IGRPPageHeader,
+  IGRPAlertDialog,
+  IGRPAlertDialogAction,
+  IGRPAlertDialogCancel,
+  IGRPAlertDialogContent,
+  IGRPAlertDialogDescription,
+  IGRPAlertDialogFooter,
+  IGRPAlertDialogHeader,
+  IGRPAlertDialogTitle,
+} from '@igrp/igrp-framework-react-design-system';
 import { StatusPedido, CreateStatusPedidoCommand, UpdateStatusPedidoCommand, PageStatusPedidoResponse } from '@/models/configuracoes.models';
 import { getStatusPedidos, createStatusPedido, updateStatusPedido, inativarStatusPedido, getStatusPedidoById } from '@/services/configuracao.service';
-import { useModal } from '@/hooks/useModal';
-import FeedbackMessage from '@/components/shared/FeedbackMessage';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import ConfirmacaoDialog from '@/components/shared/ConfirmacaoDialog';
+import LoadingSpinner from '@/components/shared/LoadingSpinner'; // Manter ou usar spinner IGRP
 
 export default function PaginaStatusPedidos() {
   const [statusPedidos, setStatusPedidos] = useState<StatusPedido[]>([]);
@@ -18,48 +30,56 @@ export default function PaginaStatusPedidos() {
   const [isLoading, setIsLoading] = useState(false);
   const [isTableLoading, setIsTableLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<string | null>(null);
 
-  // TODO: Adicionar estados para paginação (currentPage, totalPages, etc.)
-  // const [currentPage, setCurrentPage] = useState(0);
-  // const [totalPages, setTotalPages] = useState(0);
+  const { igrpToast } = useIGRPToast();
 
-  const { isOpen: isFormModalOpen, openModal: openFormModal, closeModal: closeFormModal } = useModal();
-  const { isOpen: isConfirmModalOpen, openModal: openConfirmModal, closeModal: closeConfirmModal } = useModal();
+  // Controle de modais
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [itemParaToggle, setItemParaToggle] = useState<StatusPedido | null>(null);
 
   const carregarStatusPedidos = useCallback(async (showLoadingSpinner = true, page = 0) => {
     if (showLoadingSpinner) setIsTableLoading(true);
     setError(null);
     try {
-      // TODO: Passar parâmetros de paginação e filtros
       const response: PageStatusPedidoResponse = await getStatusPedidos(undefined, undefined, undefined, page, 20, "ordem,asc");
       setStatusPedidos(response.content || []);
-      // setTotalPages(response.totalPages);
-      // setCurrentPage(response.number);
     } catch (err: any) {
-      setError(err.message || 'Falha ao carregar status de pedidos.');
+      const errorMsg = err.message || 'Falha ao carregar status de pedidos.';
+      setError(errorMsg);
+      igrpToast({ title: 'Erro!', description: errorMsg, variant: 'destructive' });
       console.error(err);
     } finally {
       if (showLoadingSpinner) setIsTableLoading(false);
     }
-  }, []);
+  }, [igrpToast]);
 
   useEffect(() => {
     carregarStatusPedidos();
   }, [carregarStatusPedidos]);
 
+  const openFormModal = () => setIsFormModalOpen(true);
+  const closeFormModal = () => {
+    setIsFormModalOpen(false);
+    setItemSelecionado(null);
+    setError(null);
+  }
+
+  const openConfirmModal = () => setIsConfirmModalOpen(true);
+  const closeConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    setItemParaToggle(null);
+  }
+
   const handleCriar = () => {
     setError(null);
-    setFeedback(null);
     setItemSelecionado(null);
     openFormModal();
   };
 
-  const handleEditar = async (id: number) => { // ID é number para StatusPedido
+  const handleEditar = async (id: number) => {
     setIsLoading(true);
     setError(null);
-    setFeedback(null);
     try {
       const detalhe = await getStatusPedidoById(id);
       setItemSelecionado(detalhe);
@@ -75,19 +95,22 @@ export default function PaginaStatusPedidos() {
   const handleSalvar = async (data: CreateStatusPedidoCommand | UpdateStatusPedidoCommand) => {
     setIsLoading(true);
     setError(null);
-    setFeedback(null);
     try {
-      if ('id' in data && data.id) { // Update
+      let successMessage = "";
+      if ('id' in data && data.id) {
         await updateStatusPedido(data.id, data as UpdateStatusPedidoCommand);
-        setFeedback("Status de Pedido atualizado com sucesso!");
-      } else { // Create
+        successMessage = "Status de Pedido atualizado com sucesso!";
+      } else {
         await createStatusPedido(data as CreateStatusPedidoCommand);
-        setFeedback("Status de Pedido criado com sucesso!");
+        successMessage = "Status de Pedido criado com sucesso!";
       }
       closeFormModal();
+      igrpToast({ title: 'Sucesso!', description: successMessage, variant: 'success' });
       await carregarStatusPedidos(false);
     } catch (err: any) {
-      setError(err.message || 'Falha ao salvar status de pedido.');
+      const errorMsg = err.message || 'Falha ao salvar status de pedido.';
+      setError(errorMsg);
+      igrpToast({ title: 'Erro ao Salvar!', description: errorMsg, variant: 'destructive' });
       console.error(err);
       return;
     } finally {
@@ -97,7 +120,6 @@ export default function PaginaStatusPedidos() {
 
   const handleToggleStatus = (id: number) => {
     setError(null);
-    setFeedback(null);
     const item = statusPedidos.find(sp => sp.id === id);
     if (item) {
       setItemParaToggle(item);
@@ -109,50 +131,53 @@ export default function PaginaStatusPedidos() {
     if (!itemParaToggle) return;
     setIsLoading(true);
     setError(null);
-    setFeedback(null);
-    const atualmenteVisivel = itemParaToggle.visivelPortal; // ou itemParaToggle.estado === 'ATIVO'
+    const atualmenteVisivel = itemParaToggle.visivelPortal;
+    let successMessage = "";
 
     try {
       if (atualmenteVisivel) {
-        // Inativar (ou tornar não visível no portal)
-        // O backend tem um endpoint DELETE para inativar, que provavelmente altera 'visivelPortal' para false ou um status similar.
         await inativarStatusPedido(itemParaToggle.id);
-        setFeedback(`Status "${itemParaToggle.nome}" tornado não visível/inativado.`);
+        successMessage = `Status "${itemParaToggle.nome}" tornado não visível/inativado.`;
       } else {
-        // Ativar (ou tornar visível no portal) via PUT
         const cmdData: UpdateStatusPedidoCommand = {
             id: itemParaToggle.id,
-            codigo: itemParaToggle.codigo,
+            codigo: itemParaToggle.codigo, // Preservar outros campos
             nome: itemParaToggle.nome,
             descricao: itemParaToggle.descricao,
             cor: itemParaToggle.cor,
             icone: itemParaToggle.icone,
             ordem: itemParaToggle.ordem,
-            visivelPortal: true, // Ativando
+            visivelPortal: true,
         };
         await updateStatusPedido(itemParaToggle.id, cmdData);
-        setFeedback(`Status "${itemParaToggle.nome}" tornado visível/ativado.`);
+        successMessage = `Status "${itemParaToggle.nome}" tornado visível/ativado.`;
       }
+      igrpToast({ title: 'Sucesso!', description: successMessage, variant: 'success' });
       await carregarStatusPedidos(false);
     } catch (err: any) {
-      setError(err.message || `Falha ao alterar visibilidade/status do item.`);
+      const errorMsg = err.message || `Falha ao alterar visibilidade/status do item.`;
+      setError(errorMsg);
+      igrpToast({ title: 'Erro!', description: errorMsg, variant: 'destructive' });
       console.error(err);
     } finally {
       setIsLoading(false);
       closeConfirmModal();
-      setItemParaToggle(null);
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Gerenciar Status de Pedidos</h1>
-        <Button onClick={handleCriar}>Novo Status de Pedido</Button>
-      </div>
+    <div className="container mx-auto p-4 flex flex-col gap-4">
+      <IGRPPageHeader
+        title="Gerenciar Status de Pedidos"
+        description="Defina os diferentes status que um pedido pode assumir."
+      >
+        <IGRPButton onClick={handleCriar} iconName="SquarePlus" showIcon>
+          Novo Status de Pedido
+        </IGRPButton>
+      </IGRPPageHeader>
 
-      {error && <FeedbackMessage type="error" message={error} className="mb-4" />}
-      {feedback && <FeedbackMessage type="success" message={feedback} className="mb-4" />}
+      {error && !isFormModalOpen && <FeedbackMessage type="error" message={error} className="mb-4" />}
+
 
       {isTableLoading && !statusPedidos.length ? (
          <div className="flex justify-center items-center h-64"><LoadingSpinner size="lg" /></div>
@@ -160,31 +185,44 @@ export default function PaginaStatusPedidos() {
         <StatusPedidosDataTable
           data={statusPedidos}
           onEdit={handleEditar}
-          onToggleStatus={handleToggleStatus} // Este botão pode ser "Visível/Não Visível" ou "Ativar/Inativar"
+          onToggleStatus={handleToggleStatus}
           isLoading={isTableLoading}
         />
       )}
 
-      {isFormModalOpen && (
-        <Modal isOpen={isFormModalOpen} onClose={() => { closeFormModal(); setError(null);}} title={itemSelecionado ? 'Editar Status' : 'Novo Status'}>
+      <IGRPModalDialog open={isFormModalOpen} onOpenChange={(isOpen) => !isOpen && closeFormModal()}>
+        <IGRPModalDialogContent>
+          <IGRPModalDialogHeader>
+            <IGRPModalDialogTitle>{itemSelecionado ? 'Editar Status de Pedido' : 'Novo Status de Pedido'}</IGRPModalDialogTitle>
+          </IGRPModalDialogHeader>
           <FormularioStatusPedido
             initialData={itemSelecionado}
             onSubmit={handleSalvar}
-            onCancel={() => { closeFormModal(); setError(null);}}
+            onCancel={closeFormModal}
             isLoading={isLoading}
           />
-        </Modal>
-      )}
+        </IGRPModalDialogContent>
+      </IGRPModalDialog>
 
-      {isConfirmModalOpen && itemParaToggle && (
-        <ConfirmacaoDialog
-          isOpen={isConfirmModalOpen}
-          onClose={() => {closeConfirmModal(); setItemParaToggle(null);}}
-          onConfirm={confirmarToggleStatus}
-          title={`Confirmar Alteração de Visibilidade`}
-          message={`Tem certeza que deseja alterar a visibilidade do status "${itemParaToggle.nome}"? (${itemParaToggle.visivelPortal ? 'Tornar Não Visível' : 'Tornar Visível'})`}
-          isLoading={isLoading}
-        />
+      {itemParaToggle && (
+         <IGRPAlertDialog open={isConfirmModalOpen} onOpenChange={(isOpen) => !isOpen && closeConfirmModal()}>
+          <IGRPAlertDialogContent>
+            <IGRPAlertDialogHeader>
+              <IGRPAlertDialogTitle>
+                Confirmar Alteração de Visibilidade
+              </IGRPAlertDialogTitle>
+              <IGRPAlertDialogDescription>
+                Tem certeza que deseja alterar a visibilidade do status "{itemParaToggle.nome}"? ({itemParaToggle.visivelPortal ? 'Tornar Não Visível' : 'Tornar Visível'})
+              </IGRPAlertDialogDescription>
+            </IGRPAlertDialogHeader>
+            <IGRPAlertDialogFooter>
+              <IGRPAlertDialogCancel onClick={closeConfirmModal} disabled={isLoading}>Cancelar</IGRPAlertDialogCancel>
+              <IGRPAlertDialogAction onClick={confirmarToggleStatus} disabled={isLoading}>
+                {isLoading ? 'Confirmando...' : 'Confirmar'}
+              </IGRPAlertDialogAction>
+            </IGRPAlertDialogFooter>
+          </IGRPAlertDialogContent>
+        </IGRPAlertDialog>
       )}
     </div>
   );
