@@ -8,7 +8,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import CategoriaForm from '@/app/[locale]/(igrp)/(generated)/categorias/components/categoriaform'
+import CategoriaForm from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/categorias/components/categoriaform'
+
 import { 
   IGRPPageHeader,
 	IGRPButton 
