@@ -8,24 +8,31 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import CategoriaForm from '@/app/[locale]/(igrp)/(generated)/categorias/components/categoriaform'
+import CategoriaForm from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/categorias/components/categoriaform'
 import { 
   IGRPPageHeader,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
 
 
-export default function PageEditarComponent() {
+export default function PageEditarComponent({ params }: { params: { id: string } }) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const categoriaFormRef = useRef<any>(null);
+  // Usar React.use para acessar params.id de forma segura
+  const { id } = params;
 
-  
-  
-  
+  const handleSubmit = () => {
+    // Acionar o submit do formulário através da referência ao componente CategoriaForm
+    if (categoriaFormRef.current && categoriaFormRef.current.submitForm) {
+      categoriaFormRef.current.submitForm();
+    }
+  };
 
   return (
 <div className={ cn('page','space-y-6',)}    >
 	<div className={ cn('section',' space-x-6 space-y-6',)}    >
 	<IGRPPageHeader
-  title={ `Atulizar Categoria` }
+  title={ `Atualizar Categoria` }
   description={ `Atualizar Categoria de Serviço` }
   iconBackButton={ `Search` }
   showBackButton={ true }
@@ -43,7 +50,7 @@ showIcon={ true }
 iconName={ `SaveAll` }
 
   className={ cn() }
-  onClick={ () => {} }
+  onClick={handleSubmit}
   
 >
   Atualizar
@@ -51,6 +58,8 @@ iconName={ `SaveAll` }
 </div>
 </IGRPPageHeader>
 
-<CategoriaForm    ></CategoriaForm></div></div>
+<div>
+  <CategoriaForm id={id} ref={categoriaFormRef}></CategoriaForm>
+</div></div></div>
   );
 }

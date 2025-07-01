@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /**
  * Configuration registry for custom elements categorized by UI context.
  *
@@ -42,8 +43,8 @@
  */
 
 export default {
-  types: [],
-  actions: [],
-  functions: [],
+  types: ['types/categorias', 'types/tipos-servicos', 'types/status-pedido'],
+  actions: ['actions/categorias', 'actions/tipos-servicos', 'actions/status-pedido'],
+  functions: ['hooks/use-categorias','hooks/use-tipos-servicos','hooks/use-status-pedido'],
   components: []
 };

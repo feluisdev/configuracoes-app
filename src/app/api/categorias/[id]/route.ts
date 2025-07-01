@@ -5,7 +5,8 @@ const API_CATEGORIAS_URL = process.env.NEXT_PUBLIC_API_URL + '/configuracoes/v1/
 
 // GET: obter categoria por ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-    const id = params.id;
+    // Aguardar os parâmetros antes de acessar suas propriedades
+    const id = await params.id;
     
     try {
         const res = await fetch(`${API_CATEGORIAS_URL}/${id}`);
@@ -28,7 +29,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 // PUT: atualizar categoria por ID
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-    const id = params.id;
+    // Aguardar os parâmetros antes de acessar suas propriedades
+    const id = await params.id;
     const data = await req.json();
     
     try {
@@ -56,7 +58,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
 // DELETE: inativar categoria por ID
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-    const id = params.id;
+    // Aguardar os parâmetros antes de acessar suas propriedades
+    const id = await params.id;
     
     try {
         const res = await fetch(`${API_CATEGORIAS_URL}/${id}`, {

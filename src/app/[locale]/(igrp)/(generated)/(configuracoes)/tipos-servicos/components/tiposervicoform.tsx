@@ -19,10 +19,41 @@ import {
 	IGRPInputNumber 
 } from "@igrp/igrp-framework-react-design-system";
 
-export default function Tiposervicoform({ {{id}} } : { {{id}}?: string }) {
+export default function Tiposervicoform({ id } : { id?: string }) {
 
-  const formformTipoServicoRef = useRef<IGRPFormHandle<anyZodType> | null>(null);
-  const [contentFormTipoServico, setContentFormTipoServico] = useState<any>(null);
+  
+  const formTipoServico = z.object({
+    nome: z.string().optional(),
+    codigo: z.string().optional(),
+    categoriaId: z.string().optional(),
+    descricao: z.string().optional(),
+    prazoEstimado: z.number().optional(),
+    valorBase: z.number().optional(),
+    requerVistoria: z.boolean().optional(),
+    requerAnaliseTec: z.boolean().optional(),
+    requerAprovacao: z.boolean().optional(),
+    disponivelPortal: z.boolean().optional(),
+    ativo: z.boolean().optional()
+})
+
+type FormTipoServicoZodType = typeof formTipoServico;
+
+const initFormTipoServico: z.infer<FormTipoServicoZodType> = {
+    nome: ``,
+    codigo: ``,
+    categoriaId: ``,
+    descricao: ``,
+    prazoEstimado: undefined,
+    valorBase: undefined,
+    requerVistoria: undefined,
+    requerAnaliseTec: undefined,
+    requerAprovacao: undefined,
+    disponivelPortal: undefined,
+    ativo: undefined
+}
+
+  const formformTipoServicoRef = useRef<IGRPFormHandle<FormTipoServicoZodType> | null>(null);
+  const [formTipoServicoData, setFormTipoServicoData] = useState<any>(initFormTipoServico);
   const [selectCategoriaOptions, setSelectCategoriaOptions] = useState<IGRPOptionsProps[]>([]);
   const [requerVistoriaOptions, setRequerVistoriaOptions] = useState<IGRPOptionsProps[]>([{"label":"Sim","value":"true"},{"label":"Não","value":"false"}]);
   const [requerVistoriaValue, setRequerVistoriaValue] = useState<string>(`false`);
@@ -41,11 +72,12 @@ const { igrpToast } = useIGRPToast()
   return (
 <div className={ cn('component',)}    >
 	<IGRPForm
+  schema={ formTipoServico }
   validationMode={ `onBlur` }
   gridClassName={ `flex flex-col` }
 formRef={ formformTipoServicoRef }
   onSubmit={ (e) => {} }
-  defaultValues={ contentFormTipoServico }
+  defaultValues={ formTipoServicoData }
 >
   <>
   <div className={ cn('grid','grid-cols-12',' gap-4',)}    >
@@ -117,7 +149,7 @@ required={ false }
 </IGRPInputNumber>
 <IGRPInputNumber
   name={ `valorBase` }
-  label={ `Valor Base (€)` }
+  label={ `Valor Base (CVE)` }
 
 min={ 0 }
 max={ 9999999 }

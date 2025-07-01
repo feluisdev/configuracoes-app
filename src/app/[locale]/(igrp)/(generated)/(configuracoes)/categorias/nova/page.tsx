@@ -17,10 +17,15 @@ import {
 
 
 export default function PageNovaComponent() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const categoriaFormRef = useRef<any>(null);
 
-  
-  
-  
+  const handleSubmit = () => {
+    // Acionar o submit do formulário através da referência ao componente CategoriaForm
+    if (categoriaFormRef.current && categoriaFormRef.current.submitForm) {
+      categoriaFormRef.current.submitForm();
+    }
+  };
 
   return (
 <div className={ cn('page','space-y-6',)}    >
@@ -44,7 +49,7 @@ showIcon={ true }
 iconName={ `Save` }
 
   className={ cn() }
-  onClick={ () => {} }
+  onClick={handleSubmit}
   
 >
   Gravar
@@ -52,6 +57,8 @@ iconName={ `Save` }
 </div>
 </IGRPPageHeader>
 
-<CategoriaForm    ></CategoriaForm></div></div>
+<div>
+  <CategoriaForm ref={categoriaFormRef}></CategoriaForm>
+</div></div></div>
   );
 }

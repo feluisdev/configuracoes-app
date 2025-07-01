@@ -8,17 +8,16 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import StatusPedidoForm from '@/app/[locale]/(igrp)/(generated)/statusPedidos/components/statuspedidoform'
+import StatusPedidoForm from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/status-pedidos/components/statuspedidoform'
 import { 
   IGRPPageHeader,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
 
 
-export default function PageEditarstatuspedidoComponent() {
-
-  
-  
+export default function PageEditarstatuspedidoComponent({ params }: { params: { id: string } }) {
+  // Usar o id dos parâmetros da rota
+  const { id } = params;
   
 
   return (
@@ -43,6 +42,6 @@ iconName={ `SaveAll` }
 </div>
 </IGRPPageHeader>
 
-<StatusPedidoForm  id={ {{routeParams.id}} }   ></StatusPedidoForm></div></div>
+<StatusPedidoForm id={id}></StatusPedidoForm></div></div>
   );
 }

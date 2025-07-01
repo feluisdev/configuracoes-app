@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 'use client'
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
@@ -6,268 +7,270 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useRef } from 'react';
-import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import { cn, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { IGRPFormHandle } from "@igrp/igrp-framework-react-design-system";
 import { z } from "@igrp/igrp-framework-react-design-system"
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
-import { 
+import { useRouter } from "next/navigation";
+import {
   IGRPForm,
-	IGRPInputText,
-	IGRPTextarea,
-	IGRPInputHidden,
-	IGRPInputNumber,
-	IGRPSelect,
-	IGRPIcon,
-	IGRPInputColor 
+  IGRPInputText,
+  IGRPTextarea,
+  IGRPInputHidden,
+  IGRPInputNumber,
+  IGRPSelect,
+  IGRPIcon,
+  IGRPInputColor
 } from "@igrp/igrp-framework-react-design-system";
 
-// Importar serviços e modelos necessários
-import { fetchCategoriaById, createCategoria, updateCategoria } from '../../../../../(myapp)/actions/categorias';
-import { CategoriaServico } from '../../../../../(myapp)/types/categorias';
-import { useRouter } from 'next/navigation';
+// Importar o hook useCategorias para operações de categorias
+import { useCategorias } from '@/app/[locale]/(myapp)/hooks/use-categorias';
+import { CategoriaServico } from '@/app/[locale]/(myapp)/types/categorias';
 
-// Definir o schema de validação do formulário
-const formSchema = z.object({
-  inputText1: z.string().min(3, { message: 'O nome deve ter pelo menos 3 caracteres' }),
-  inputTextarea1: z.string().optional(),
-  inputHidden1: z.string().optional(),
-  inputNumber1: z.number().int().positive().optional(),
-  select1: z.string(),
-  icone: z.string().optional(),
-  inputColor1: z.string().optional()
-});
+const Categoriaform = forwardRef(({ id }: { id?: string }, ref) => {
 
-// Tipo para o schema de validação
-type FormValues = z.infer<typeof formSchema>;
-type anyZodType = typeof formSchema;
 
-export default function Categoriaform({ id } : { id?: string }) {
+  const form1 = z.object({
+    nome: z.string().optional(),
+    codigo: z.string().optional(),
+    descricao: z.string().optional(),
+    ordem: z.number().optional(),
+    boolean: z.boolean().optional(),
+    cor: z.string().optional()
+  })
 
-  const formform1Ref = useRef<IGRPFormHandle<anyZodType> | null>(null);
-  const [contentFormform1, setContentFormform1] = useState<FormValues | null>(null);
-  const [selectselect1Options, setSelectselect1Options] = useState<IGRPOptionsProps[]>([
-    { label: 'Ativo', value: 'true' },
-    { label: 'Inativo', value: 'false' }
-  ]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  type Form1ZodType = typeof form1;
+
+  const initForm1: z.infer<Form1ZodType> = {
+    nome: ``,
+    codigo: ``,
+    descricao: ``,
+    ordem: undefined,
+    boolean: undefined,
+    cor: undefined
+  }
+
+  const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
+  const [form1Data, setForm1Data] = useState<any>(initForm1);
+  const [selectbooleanValue, setSelectbooleanValue] = useState<string>(``);
+  const [selectbooleanOptions, setSelectbooleanOptions] = useState<IGRPOptionsProps[]>([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  // Referência para o botão de submit oculto
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Expor o método submitForm para o componente pai
+  useImperativeHandle(ref, () => ({
+    submitForm: () => {
+      // Acionar o botão de submit oculto
+      if (submitButtonRef.current) {
+        submitButtonRef.current.click();
+      }
+    }
+  }));
+
+  // Obter funções e dados do hook useCategorias
+  const {
+    useCategoriaById,
+    createCategoriaMutation,
+    updateCategoriaMutation } = useCategorias();
+
+  // Buscar categoria por ID se estiver editando
+  const { data: categoriaData } = useCategoriaById(id || '');
+
   const { igrpToast } = useIGRPToast();
   const router = useRouter();
 
-  // Carregar os dados do servidor e preencher o formulário
   useEffect(() => {
-    // Se tiver ID, buscar dados da categoria para edição
-    if (id) {
-      setLoading(true);
-      setError(null);
-      
-      fetchCategoriaById(id)
-        .then((categoria) => {
-          // Mapear os dados da categoria para o formato do formulário
-          const formData: FormValues = {
-            inputText1: categoria.nome,
-            inputTextarea1: categoria.descricao || '',
-            inputHidden1: id,
-            inputNumber1: categoria.ordem || 0,
-            select1: categoria.ativo ? 'true' : 'false',
-            icone: categoria.icone || 'Heart',
-            inputColor1: categoria.cor || '#000000'
-          };
-          
-          // Atualizar o estado do formulário
-          setContentFormform1(formData);
-        })
-        .catch((err) => {
-          console.error('Erro ao carregar categoria:', err);
-          setError('Não foi possível carregar os dados da categoria. Por favor, tente novamente.');
-          igrpToast({
-            type: 'error',
-            title: 'Erro ao carregar categoria',
-            description: err.message
-          });
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      // Formulário em branco para nova categoria
-      setContentFormform1({
-        inputText1: '',
-        inputTextarea1: '',
-        inputHidden1: '',
-        inputNumber1: 0,
-        select1: 'true',
-        icone: 'Heart',
-        inputColor1: '#000000'
-      });
-    }
-  }, [id, igrpToast]);
+    // Configurar opções para o select de status (ativo/inativo)
+    setSelectbooleanOptions([
+      { label: 'Ativo', value: 'true' },
+      { label: 'Inativo', value: 'false' }
+    ]);
 
-  // Função para lidar com o envio do formulário
-  const handleSubmit = async (data: FormValues) => {
+    // Verificar se está editando (id fornecido) ou criando nova categoria
+    setIsEditing(!!id);
+
+    // Se estiver editando e os dados da categoria foram carregados
+    if (isEditing && categoriaData) {
+      // Preencher o formulário com os dados da categoria
+      // Garantir que a cor esteja no formato correto (#rrggbb)
+      const corFormatada = categoriaData.cor && categoriaData.cor !== 'string' 
+        ? categoriaData.cor 
+        : '#000000';
+        
+      setForm1Data({
+        nome: categoriaData.nome || '',
+        codigo: categoriaData.codigo || '',
+        descricao: categoriaData.descricao || '',
+        ordem: categoriaData.ordem,
+        boolean: categoriaData.ativo,
+        cor: corFormatada
+      });
+
+      // Atualizar o valor do select de status
+      setSelectbooleanValue(categoriaData.ativo ? 'true' : 'false');
+    }
+  }, [id, categoriaData, isEditing]);
+
+  // Função para lidar com a submissão do formulário
+  const handleSubmit = async (data: any) => {
     try {
-      setLoading(true);
-      setError(null);
-      
-      // Mapear os dados do formulário para o formato da API
+      // Preparar os dados para envio à API
       const categoriaData = {
-        nome: data.inputText1,
-        codigo: data.inputText1.toLowerCase().replace(/\s+/g, '-'), // Gerar código a partir do nome
-        descricao: data.inputTextarea1,
-        icone: data.icone,
-        cor: data.inputColor1,
-        ordem: data.inputNumber1,
-        ativo: data.select1 === 'true'
+        nome: data.nome,
+        codigo: data.codigo, // Usar o código fornecido pelo usuário
+        descricao: data.descricao,
+        ordem: data.ordem,
+        ativo: data.boolean,
+        cor: data.cor,
+        icone: 'Heart' // Valor fixo por enquanto
       };
-      
-      let result;
-      if (id) {
+
+      if (isEditing && id) {
         // Atualizar categoria existente
-        result = await updateCategoria(id, categoriaData);
-        igrpToast({ type: 'success', title: 'Categoria atualizada com sucesso' });
+        await updateCategoriaMutation.mutateAsync({
+          id,
+          data: categoriaData
+        });
+        igrpToast({
+          type: 'success',
+          title: 'Categoria atualizada com sucesso!'
+        });
       } else {
         // Criar nova categoria
-        result = await createCategoria(categoriaData);
-        igrpToast({ type: 'success', title: 'Categoria criada com sucesso' });
+        await createCategoriaMutation.mutateAsync(categoriaData);
+        igrpToast({
+          type: 'success',
+          title: 'Categoria criada com sucesso!'
+        });
       }
-      
-      // Redirecionar para a lista de categorias
-      router.push('./list');
-    } catch (err: any) {
-      console.error('Erro ao salvar categoria:', err);
-      setError('Não foi possível salvar a categoria. Por favor, tente novamente.');
-      igrpToast({ type: 'error', title: 'Erro ao salvar categoria', description: err.message });
-    } finally {
-      setLoading(false);
+
+      // Voltar para a lista de categorias
+      router.push('/categorias');
+    } catch (error) {
+      console.error('Erro ao salvar categoria:', error);
+      igrpToast({
+        type: 'error',
+        title: `Erro ao ${isEditing ? 'atualizar' : 'criar'} categoria. Tente novamente.`
+      });
     }
   };
 
   return (
-<div className={ cn('component',)}    >
-	<IGRPForm
-  validationMode={ `onBlur` }
-  gridClassName={ `flex flex-col` }
-  formRef={ formform1Ref }
-  onSubmit={ handleSubmit }
-  defaultValues={ contentFormform1 || undefined }
-  schema={ formSchema }
->
-  <>
-  <div className={ cn('grid','grid-cols-12',' gap-4',)}    >
-	<div className={ cn('col-span-6 flex flex-col gap-6',)}    >
-	<IGRPInputText
-  name={ `inputText1` }
-  label={ `Nome` }
-showIcon={ false }
-required={ true }
+    <div className={cn('component',)}    >
+      <IGRPForm
+        schema={form1}
+        validationMode={`onBlur`}
+        gridClassName={`flex flex-col`}
+        formRef={formform1Ref}
+        className={cn()}
+        onSubmit={handleSubmit}
+        defaultValues={form1Data}
+      >
+        <>
+          {/* Botão de submit oculto */}
+          <button
+            type="submit"
+            ref={submitButtonRef}
+            style={{ display: 'none' }}
+          />
+          <div className={cn('grid', 'grid-cols-12', ' gap-4',)}    >
+            <div className={cn('col-span-6 flex flex-col gap-6',)}    >
+              <IGRPInputText
+                name={`nome`}
+                label={`Nome`}
+                showIcon={false}
+                required={true}
 
 
-placeholder={ `O Nome da Categoria de serviço` }
-  
-  
->
-</IGRPInputText>
-<IGRPTextarea
-  name={ `inputTextarea1` }
-  
-label={ `Descrição` }
-rows={ 10 }
-required={ false }
+                placeholder={`O Nome da Categoria de serviço`}
 
 
-placeholder={ `Introduza uma descrição para a categoria de serviço` }
-  
-  
->
-</IGRPTextarea>
-<IGRPInputHidden
-  name={ `inputHidden1` }
-  label={ `id` }
-required={ false }
+              >
+              </IGRPInputText>
+              <IGRPInputText
+                name={`codigo`}
+                label={`Código`}
+                showIcon={false}
+                required={true}
 
 
-  
-  
->
-</IGRPInputHidden></div>
-<div className={ cn('col-span-6 flex flex-col gap-6',)}    >
-	<div className={ cn('grid','grid-cols-12',' gap-4',)}    >
-	<div className={ cn('col-span-6 flex flex-col gap-6',)}    >
-	<IGRPInputNumber
-  name={ `inputNumber1` }
-  label={ `Ordem` }
-
-max={ 9999999 }
-step={ 1 }
-required={ false }
+                placeholder={`Código único da categoria`}
 
 
-description={ `Organize a sua categoria` }
-  
-  
->
-</IGRPInputNumber>
-<IGRPSelect
-  name={ `select1` }
-  label={ `Ativo?` }
-placeholder={ `Select an option...` }
+              >
+              </IGRPInputText>
+              <IGRPTextarea
+                name={`descricao`}
 
-gridSize={ `full` }
+                label={`Descrição`}
+                rows={10}
+                required={false}
 
 
-options={ selectselect1Options }
->
-</IGRPSelect></div>
-<div className={ cn('col-span-6 flex flex-col gap-6',)}    >
-	<IGRPIcon
-  name={ `icone` }
-  iconName={ `Heart` }
-size={ 24 }
-
-  
-  
->
-</IGRPIcon>
-<IGRPInputColor
-  name={ `inputColor1` }
-  label={ `Cor` }
-
-defaultValue={ `#000000` }
-showHexValue={ true }
-required={ false }
+                placeholder={`Introduza uma descrição para a categoria de serviço`}
 
 
-  
-  
->
-</IGRPInputColor></div></div></div></div>
+              >
+              </IGRPTextarea></div>
+            <div className={cn('col-span-6 flex flex-col gap-6',)}    >
+              <div className={cn('grid', 'grid-cols-12', ' gap-4',)}    >
+                <div className={cn('col-span-6 flex flex-col gap-6',)}    >
+                  <IGRPInputNumber
+                    name={`ordem`}
+                    label={`Ordem`}
 
-  {/* Botões de ação */}
-  <div className="flex justify-end gap-2 mt-6">
-    <button 
-      type="button" 
-      className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-      onClick={() => router.push('./list')}
-    >
-      Cancelar
-    </button>
-    <button 
-      type="submit" 
-      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-      disabled={loading}
-    >
-      {loading ? 'Salvando...' : id ? 'Atualizar' : 'Criar'}
-    </button>
-  </div>
+                    max={9999999}
+                    step={1}
+                    required={false}
 
-  {/* Mensagem de erro */}
-  {error && (
-    <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
-      {error}
-    </div>
-  )}
-</>
-</IGRPForm></div>
+
+                    description={`Organize a sua categoria`}
+
+
+                  >
+                  </IGRPInputNumber>
+                  <IGRPSelect
+                    name={`boolean`}
+                    label={`Ativo?`}
+                    placeholder={`Select an option...`}
+
+                    gridSize={`full`}
+
+
+                    onValueChange={(value) => setSelectbooleanValue(value)}
+                    value={selectbooleanValue}
+                    options={selectbooleanOptions}
+                  >
+                  </IGRPSelect></div>
+                <div className={cn('col-span-6 flex flex-col gap-6',)}    >
+                  <IGRPIcon
+                    name={`icone`}
+                    iconName={`Heart`}
+                    size={24}
+
+
+
+                  >
+                  </IGRPIcon>
+                  <IGRPInputColor
+                    name={`cor`}
+                    label={`Cor`}
+
+                    defaultValue={`#000000`}
+                    showHexValue={true}
+                    required={false}
+
+
+
+
+                  >
+                  </IGRPInputColor></div></div></div></div>
+        </>
+      </IGRPForm></div>
   );
-}
+});
+
+export default Categoriaform;

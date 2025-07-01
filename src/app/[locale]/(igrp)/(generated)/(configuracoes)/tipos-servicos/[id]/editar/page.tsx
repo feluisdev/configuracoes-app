@@ -8,17 +8,16 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import TipoServicoForm from '@/app/[locale]/(igrp)/(generated)/tipos-servicos/components/tiposervicoform'
+import TipoServicoForm from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/tipos-servicos/components/tiposervicoform'
 import { 
   IGRPPageHeader,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
 
 
-export default function PageEditartiposervicoComponent() {
-
-  
-  
+export default function PageEditartiposervicoComponent({ params }: { params: { id: string } }) {
+  // Usar o id dos parâmetros da rota
+  const { id } = params;
   
 
   return (
@@ -43,6 +42,6 @@ iconName={ `SaveAll` }
 </div>
 </IGRPPageHeader>
 
-<TipoServicoForm  id={ {{routeParams.id}} }   ></TipoServicoForm></div></div>
+<TipoServicoForm id={id}></TipoServicoForm></div></div>
   );
 }
