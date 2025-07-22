@@ -73,7 +73,7 @@ export default function Categoriaformulario({ id, afterSubmit, formRef } : { id?
         setIsLoading(false);
       });
     }
-  },[id])
+  },[id, igrpToast])
 
 
 
