@@ -6,7 +6,7 @@ const API_TIPOS_SERVICOS_URL = process.env.NEXT_PUBLIC_API_URL + '/configuracoes
 // GET: obter tipo de serviço por ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     // Aguardar os parâmetros antes de acessar suas propriedades
-    const id = await params.id;
+    const { id } = await params;
     
     try {
         const res = await fetch(`${API_TIPOS_SERVICOS_URL}/${id}`);
@@ -30,21 +30,30 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 // PUT: atualizar tipo de serviço por ID
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
     // Aguardar os parâmetros antes de acessar suas propriedades
-    const id = await params.id;
+    const { id } = await params;
     const data = await req.json();
+    // Log the incoming update request
+    console.log('[TIPO_SERVICO][UPDATE] Incoming PUT request', { id, payload: data });
     
     try {
         const res = await fetch(`${API_TIPOS_SERVICOS_URL}/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
+            // --- logging ---
+            // Capture backend status immediately after sending request for easier tracing
+            // This runs before we parse the OK check so we always know what happened.
+            
         });
         
         if (!res.ok) {
             throw new Error(`Erro chamada API: ${res.status}`);
         }
         
+        console.log('[TIPO_SERVICO][UPDATE] Backend response status', res.status);
         const tipoServicoAtualizado = await res.json();
+        // Log the updated entity returned by backend
+        console.log('[TIPO_SERVICO][UPDATE] Updated entity', tipoServicoAtualizado);
         return NextResponse.json(tipoServicoAtualizado);
         
     } catch (error: any) {
@@ -59,7 +68,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 // DELETE: inativar tipo de serviço por ID
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
     // Aguardar os parâmetros antes de acessar suas propriedades
-    const id = await params.id;
+    const { id } = await params;
     
     try {
         const res = await fetch(`${API_TIPOS_SERVICOS_URL}/${id}`, {

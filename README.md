@@ -2,16 +2,30 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### Instalação de Dependências
+
+Instale as dependências do projeto:
 
 ```bash
-npm run dev
-# or
+yarn install
+```
+
+### Dependências de Desenvolvimento Opcionais
+
+Para utilizar as ferramentas de desenvolvimento do React Query, instale a seguinte dependência:
+
+```bash
+yarn add @tanstack/react-query-devtools --dev
+```
+
+E descomente as linhas relacionadas ao ReactQueryDevtools no arquivo `src/features/igrp/providers/react-query-provider.tsx`.
+
+### Executando o Servidor de Desenvolvimento
+
+Inicie o servidor de desenvolvimento:
+
+```bash
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

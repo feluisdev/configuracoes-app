@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { 
   fetchStatusPedidos, 
   fetchStatusPedidoById, 
@@ -21,12 +21,11 @@ const QUERY_KEYS = {
   STATUS_PEDIDO: (id: string) => ['status-pedido', id],
 };
 
-// Configurações padrão para as queries
+// Configurações específicas para as queries de status de pedido
+// As configurações globais são definidas no ReactQueryProvider
 const DEFAULT_QUERY_CONFIG = {
-  staleTime: 5 * 60 * 1000, // 5 minutos
-  refetchOnWindowFocus: true,
+  // Estas configurações sobrescrevem as configurações globais quando necessário
   refetchOnMount: true,
-  retry: 2,
 };
 
 /**
@@ -50,6 +49,7 @@ const DEFAULT_QUERY_CONFIG = {
  * createStatusPedidoMutation.mutate(novoStatusPedidoData);
  */
 export function useStatusPedidos(options: FetchStatusPedidosOptions = {}) {
+  const { igrpToast } = useIGRPToast();
   const queryClient = useQueryClient();
   
   // Função utilitária para invalidar o cache de status de pedido
@@ -97,13 +97,16 @@ export function useStatusPedidos(options: FetchStatusPedidosOptions = {}) {
   const createStatusPedidoMutation = useMutation({
     mutationFn: (data: CreateStatusPedidoCommand) => createStatusPedido(data),
     onSuccess: () => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateStatusPedidosCache();
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Status de pedido criado',
+        description: 'O status de pedido foi criado com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao criar status de pedido:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Mutation para atualizar status de pedido
@@ -111,30 +114,36 @@ export function useStatusPedidos(options: FetchStatusPedidosOptions = {}) {
     mutationFn: ({ id, data }: { id: string; data: UpdateStatusPedidoCommand }) => 
       updateStatusPedido(id, data),
     onSuccess: (data, variables) => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateStatusPedidosCache();
       // Também invalidar a query específica do status de pedido
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.STATUS_PEDIDO(variables.id) });
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Status de pedido atualizado',
+        description: 'O status de pedido foi atualizado com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao atualizar status de pedido:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Mutation para inativar status de pedido
   const deleteStatusPedidoMutation = useMutation({
     mutationFn: (id: string) => deleteStatusPedido(id),
     onSuccess: (data, variables) => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateStatusPedidosCache();
       // Também invalidar a query específica do status de pedido
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.STATUS_PEDIDO(variables) });
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Status de pedido inativado',
+        description: 'O status de pedido foi inativado com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao inativar status de pedido:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Retornar as funções e dados necessários

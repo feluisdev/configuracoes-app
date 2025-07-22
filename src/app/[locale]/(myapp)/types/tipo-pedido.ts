@@ -1,6 +1,7 @@
 
 // --- Modelos para Tipos de Serviços (CUF15) ---
 export interface TipoServico {
+  [x: string]: string | undefined;
   id?: number; // ou string se for UUID
   tipoServicoId: string; // Identificador principal
   nome: string;

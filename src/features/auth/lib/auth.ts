@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async jwt({ token, account }: { token: JWT; account: any; }) {
+    async jwt({ token, account }: { token: JWT; account: { id_token?: string; access_token?: string; refresh_token?: string; expires_at?: number } | null | undefined; }) {
       if (account) {
         token.idToken = account.id_token;
         token.accessToken = account.access_token;
@@ -107,7 +107,7 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async session({ session, token }) {
-      session.user = token.user as any
+      session.user = token.user as { id: string; name?: string | null; email?: string | null }
       session.accessToken = token.accessToken as string;
       session.error = token.error as string;
       session.idToken = token.idToken as string

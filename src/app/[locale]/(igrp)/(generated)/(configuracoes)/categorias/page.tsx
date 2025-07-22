@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { IGRPDataTableFacetedFilterFn, IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
@@ -25,6 +25,8 @@ import {
 } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from "next/navigation";
 import { useCategorias } from '@/app/[locale]/(myapp)/hooks/use-categorias';
+import { useDebounce } from '@/app/[locale]/(myapp)/hooks/use-debounce';
+import { JSX } from 'react/jsx-runtime';
 
 
 export default function PageCategoriasComponent() {
@@ -38,17 +40,20 @@ export default function PageCategoriasComponent() {
     id: string;
   }
 
-  const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
-  const [dropdownFiltertableDropdownFilter1Options, setDropdownFiltertableDropdownFilter1Options] = useState<IGRPOptionsProps[]>([]);
 
 
-  const [categoriaFilrer, setCategoriaFilrer] = useState<string>(``);
+
+
+  const [categoriaFilter, setCategoriaFilter] = useState<string>(``);
   const [estadoFilter, setEstadoFilter] = useState<string>(``);
   const router = useRouter();
   const { igrpToast: toast } = useIGRPToast();
 
 
-  // Usar o hook useCategorias para buscar os dados
+  // Aplicar debounce ao filtro de categoria para evitar muitas requisições
+  const [debouncedCategoriaFilter] = useDebounce(categoriaFilter, 500);
+
+  // Usar o hook useCategorias para buscar os dados com os filtros aplicados
   const {
     categorias,
     total,
@@ -57,28 +62,36 @@ export default function PageCategoriasComponent() {
     isError,
     error,
     getStatusBadge,
-    deleteCategoriaMutation
-  } = useCategorias();
+    deleteCategoriaMutation,
+    invalidateCategoriasCache
+  } = useCategorias({
+    search: debouncedCategoriaFilter
+  });
+  
+  // Não precisamos mais recarregar dados quando o filtro mudar, pois o filtro será aplicado pela coluna
 
-  useEffect(() => {
-    // Mapear as categorias para o formato esperado pela tabela
-    if (categorias && categorias.length > 0) {
-      const mappedData = categorias.map(categoria => ({
-        categoria: categoria.nome,
-        descricao: categoria.descricao || '',
-        ordem: categoria.ordem || 0,
-        estado: categoria.estado || 'ATIVO',
-        id: categoria.categoriaId
-      }));
-
-      setContentTabletable1(mappedData);
-
-      // Configurar opções para o filtro de estado
-      if (options && options.length > 0) {
-        setDropdownFiltertableDropdownFilter1Options(options);
-      }
+  const contentTabletable1 = useMemo<Table1[]>(() => {
+    if (!categorias) {
+      return [];
     }
-  }, [categorias, options]);
+    return categorias.map(categoria => ({
+      categoria: categoria.nome || '',
+      descricao: categoria.descricao || '',
+      ordem: categoria.ordem || 0,
+      estado: categoria.estado || 'ATIVO',
+      id: categoria.categoriaId || ''
+    }));
+  }, [categorias]);
+
+  const dropdownFiltertableDropdownFilter1Options = useMemo<IGRPOptionsProps[]>(() => {
+    if (options && Array.isArray(options) && options.length > 0) {
+      return options;
+    }
+    return [
+      { label: 'Ativo', value: 'ATIVO' },
+      { label: 'Inativo', value: 'INATIVO' }
+    ];
+  }, [options]);
 
   function goTonova(row?: any): void {
     router.push(`/categorias/nova`);
@@ -96,22 +109,49 @@ export default function PageCategoriasComponent() {
 
     // Confirmar antes de eliminar
     if (confirm(`Tem certeza que deseja eliminar ${ids.length > 1 ? 'estas categorias' : 'esta categoria'}?`)) {
+      // Contador para acompanhar operações bem-sucedidas
+      let successCount = 0;
+      let errorCount = 0;
+      
       // Para cada ID selecionado, chamar a mutation de delete
       ids.forEach(id => {
         deleteCategoriaMutation.mutate(id, {
           onSuccess: () => {
-            toast({
-              title: 'Sucesso',
-              description: 'Categoria eliminada com sucesso',
-              type: 'success'
-            });
+            successCount++;
+            
+            // Verificar se todas as operações foram concluídas
+            if (successCount + errorCount === ids.length) {
+              // Mostrar mensagem de sucesso apenas uma vez ao final
+              toast({
+                title: 'Sucesso',
+                description: `${successCount} ${successCount === 1 ? 'categoria foi eliminada' : 'categorias foram eliminadas'} com sucesso`,
+                type: 'success'
+              });
+              
+              // Limpar seleções de checkbox após exclusão
+              const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+              checkboxes.forEach((checkbox: any) => {
+                checkbox.checked = false;
+              });
+            }
           },
           onError: (error) => {
+            errorCount++;
+            
             toast({
               title: 'Erro',
               description: `Erro ao eliminar categoria: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
               type: 'error'
             });
+            
+            // Verificar se todas as operações foram concluídas
+            if (successCount + errorCount === ids.length && successCount > 0) {
+              toast({
+                title: 'Resultado Parcial',
+                description: `${successCount} ${successCount === 1 ? 'categoria foi eliminada' : 'categorias foram eliminadas'} com sucesso, mas ocorreram erros em ${errorCount} ${errorCount === 1 ? 'operação' : 'operações'}.`,
+                type: 'warning'
+              });
+            }
           }
         });
       });
@@ -158,7 +198,8 @@ export default function PageCategoriasComponent() {
                 const selectedRows = document.querySelectorAll('input[type="checkbox"]:checked');
                 const ids: string[] = [];
                 selectedRows.forEach((row: any) => {
-                  if (row.value && row.value !== 'on') { // Ignorar o checkbox de selecionar todos
+                  // Verificar se o checkbox tem um valor e não é o checkbox de selecionar todos
+                  if (row.value && row.value !== 'on' && row.value !== 'true') {
                     ids.push(row.value);
                   }
                 });
@@ -171,11 +212,25 @@ export default function PageCategoriasComponent() {
           </div>
         </IGRPPageHeader>
 
-        <IGRPDataTable<Table1, Table1>
-          showFilter={true}
-          showToggleColumn={true}
-          className={cn('', 'block',)}
-          //isLoading={isLoading}
+        {isError ? (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+            <h3 className="text-lg font-medium text-red-800">Erro ao carregar categorias</h3>
+            <p className="mt-2 text-sm text-red-700">
+              {error instanceof Error ? error.message : 'Ocorreu um erro ao carregar as categorias. Tente novamente mais tarde.'}
+            </p>
+            <button 
+              className="mt-3 px-4 py-2 bg-red-100 text-red-800 rounded-md hover:bg-red-200 transition-colors"
+              onClick={() => invalidateCategoriasCache()}
+            >
+              Tentar novamente
+            </button>
+          </div>
+        ) : (
+          <IGRPDataTable<Table1, Table1>
+            showFilter={true}
+            showToggleColumn={true}
+            className={cn('', 'block',)}
+            notFoundLabel="Nenhuma categoria encontrada"
           columns={
             [
               {
@@ -210,7 +265,11 @@ export default function PageCategoriasComponent() {
                 cell: ({ row }) => {
                   return row.getValue("categoria")
                 },
-                filterFn: IGRPDataTableFacetedFilterFn
+                filterFn: (row, id, value) => {
+                  if (!value) return true;
+                  const cellValue = String(row.getValue(id)).toLowerCase();
+                  return cellValue.includes(String(value).toLowerCase());
+                }
               },
               {
                 header: ({ column }) => <IGRPDataTableHeaderSortDropdown column={column} title={`Descricao`} />
@@ -232,35 +291,35 @@ export default function PageCategoriasComponent() {
                 header: 'Estado'
                 , accessorKey: 'estado',
                 cell: ({ row }) => {
-                  const rowData = row.original;
                   const estado = row.getValue("estado") as string;
 
-                  // Criar um objeto de badge baseado no estado
-                  let variant: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "success" = "default";
+                  // Determinar o estilo do badge com base no estado
+                  const isAtivo = estado === 'ATIVO';
                   
-                  if (estado === 'ATIVO') {
-                    variant = "success";
-                  } else if (estado === 'INATIVO') {
-                    variant = "destructive";
-                  }
-
                   return <IGRPDataTableCellBadge
                     label={estado}
-                    variant={estado === 'ATIVO' ? 'solid' : 'outline'}
-                    badgeClassName={estado === 'ATIVO' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                    variant={isAtivo ? 'solid' : 'outline'}
+                    badgeClassName={isAtivo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                    iconName={isAtivo ? 'CheckCircle' : 'XCircle'}
                   />
                 },
-                filterFn: IGRPDataTableFacetedFilterFn
+                filterFn: (row, id, value) => {
+                  if (!value) return true;
+                  return row.getValue(id) === value;
+                }
               },
               {
-                header: ({ table }) => <IGRPDataTableHeaderRowsSelect table={table} title={`X`} />
-                , accessorKey: 'id',
+                id: 'select',
+                header: ({ table }) => <IGRPDataTableHeaderRowsSelect table={table} title={`X`} />,
+                accessorKey: 'id',
                 cell: ({ row }) => {
                   return <IGRPDataTableCellCheckbox
                     row={row}
-                  >
-                  </IGRPDataTableCellCheckbox>
+                    value={row.original.id}
+                  />
                 },
+                enableSorting: false,
+                enableHiding: false,
                 filterFn: IGRPDataTableFacetedFilterFn
               },
             ]
@@ -269,25 +328,55 @@ export default function PageCategoriasComponent() {
             [
               {
                 columnId: `categoria`,
-                component: (column) => (
-                  <IGRPDataTableFilterInput column={column} />
-                )
-              },
+                component: (column): JSX.Element => {
+                  // Set up column filter when component mounts
+                  const CategoriaFilterComponent = () => {
+                    useEffect(() => {
+                      if (debouncedCategoriaFilter && column) {
+                        column.setFilterValue(debouncedCategoriaFilter);
+                      }
+                    }, []);
+                  
+                    return (
+                      <IGRPDataTableFilterInput 
+                        column={column} 
+                        placeholder="Filtrar por categoria..."
+                      />
+                    );
+                  }
+                  
+                  return <CategoriaFilterComponent />
+              }},
               {
                 columnId: `estado`,
-                component: (column) => (
-                  <IGRPDataTableFilterDropdown
-                    column={column}
-                    placeholder={`Estado...`}
-
-                    options={dropdownFiltertableDropdownFilter1Options}
-                  />
-                )
+                component: (column): JSX.Element => {
+                  // Set up column filter when component mounts
+                  const EstadoFilterComponent = () => {
+                    useEffect(() => {
+                      if (estadoFilter && column) {
+                        column.setFilterValue(estadoFilter);
+                      }
+                    }, []);
+                    
+                    return (
+                      <IGRPDataTableFilterDropdown
+                        column={column}
+                        placeholder={`Estado...`}
+                        options={dropdownFiltertableDropdownFilter1Options}
+                      />
+                    );
+                  }
+                  
+                  return <EstadoFilterComponent />
+                }
               },
             ]
           }
 
           data={contentTabletable1}
-        /></div></div>
+        />
+        )}
+      </div>
+    </div>
   );
 }

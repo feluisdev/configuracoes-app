@@ -43,8 +43,8 @@
  */
 
 export default {
-  types: ['types/categorias', 'types/tipos-servicos', 'types/status-pedido'],
-  actions: ['actions/categorias', 'actions/tipos-servicos', 'actions/status-pedido'],
-  functions: ['hooks/use-categorias','hooks/use-tipos-servicos','hooks/use-status-pedido'],
+  types: [],
+  actions: [],
+  functions: ['hooks/use-categorias','hooks/use-tipos-servicos','hooks/use-status-pedido', 'actions/categorias', 'actions/tipos-servicos', 'actions/status-pedido'],
   components: []
 };

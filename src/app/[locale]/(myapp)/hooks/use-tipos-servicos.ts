@@ -3,6 +3,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { 
   fetchTiposServicos, 
   fetchTipoServicoById, 
@@ -21,12 +22,11 @@ const QUERY_KEYS = {
   TIPO_SERVICO: (id: string) => ['tipo-servico', id],
 };
 
-// Configurações padrão para as queries
+// Configurações específicas para as queries de tipos de serviços
+// As configurações globais são definidas no ReactQueryProvider
 const DEFAULT_QUERY_CONFIG = {
-  staleTime: 5 * 60 * 1000, // 5 minutos
-  refetchOnWindowFocus: true,
+  // Estas configurações sobrescrevem as configurações globais quando necessário
   refetchOnMount: true,
-  retry: 2,
 };
 
 /**
@@ -50,6 +50,8 @@ const DEFAULT_QUERY_CONFIG = {
  * createTipoServicoMutation.mutate(novoTipoServicoData);
  */
 export function useTiposServicos(options: FetchTiposServicosOptions = {}) {
+  const { igrpToast } = useIGRPToast();
+
   const queryClient = useQueryClient();
   
   // Função utilitária para invalidar o cache de tipos de serviços
@@ -97,13 +99,16 @@ export function useTiposServicos(options: FetchTiposServicosOptions = {}) {
   const createTipoServicoMutation = useMutation({
     mutationFn: (data: CreateTiposServicosCommand) => createTipoServico(data),
     onSuccess: () => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateTiposServicosCache();
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Tipo de serviço criado',
+        description: 'O tipo de serviço foi criado com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao criar tipo de serviço:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Mutation para atualizar tipo de serviço
@@ -111,30 +116,36 @@ export function useTiposServicos(options: FetchTiposServicosOptions = {}) {
     mutationFn: ({ id, data }: { id: string; data: CreateTiposServicosCommand | UpdateTiposServicosCommand }) => 
       updateTipoServico(id, data),
     onSuccess: (data, variables) => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateTiposServicosCache();
       // Também invalidar a query específica do tipo de serviço
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TIPO_SERVICO(variables.id) });
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Tipo de serviço atualizado',
+        description: 'O tipo de serviço foi atualizado com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao atualizar tipo de serviço:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Mutation para inativar tipo de serviço
   const deleteTipoServicoMutation = useMutation({
     mutationFn: (id: string) => deleteTipoServico(id),
     onSuccess: (data, variables) => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateTiposServicosCache();
       // Também invalidar a query específica do tipo de serviço
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TIPO_SERVICO(variables) });
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Tipo de serviço inativado',
+        description: 'O tipo de serviço foi inativado com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao inativar tipo de serviço:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Retornar as funções e dados necessários

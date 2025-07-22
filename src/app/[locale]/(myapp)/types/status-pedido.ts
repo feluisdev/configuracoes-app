@@ -4,7 +4,7 @@
  */
 export interface StatusPedido {
   id: number; // Backend usa Integer para ID
-  // statusPedidoId?: string; // O backend parece usar apenas 'id' (Integer) como identificador principal
+  statusPedidoId: string; // Backend usa UUID para ID
   codigo: string;
   nome: string;
   descricao?: string;
@@ -12,8 +12,7 @@ export interface StatusPedido {
   icone?: string;
   ordem?: number;
   visivelPortal?: boolean;
-  // Para consistência com outras entidades na UI, podemos adicionar 'estado'
-  estado?: 'ATIVO' | 'INATIVO'; // Derivado de visivelPortal ou outra lógica de ativação
+  estado?: 'ATIVO' | 'INATIVO'; 
 }
 
 /**

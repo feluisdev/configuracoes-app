@@ -5,8 +5,8 @@ const API_CATEGORIAS_URL = process.env.NEXT_PUBLIC_API_URL + '/configuracoes/v1/
 
 // GET: obter categoria por ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-    // Aguardar os parâmetros antes de acessar suas propriedades
-    const id = await params.id;
+    // Acessar o id diretamente dos parâmetros
+    const id = params.id;
     
     try {
         const res = await fetch(`${API_CATEGORIAS_URL}/${id}`);

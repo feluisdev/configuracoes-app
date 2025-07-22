@@ -6,17 +6,16 @@ import { IGRPToaster } from '@igrp/igrp-framework-react-design-system';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SidebarInset, SidebarProvider } from '@/features/igrp/components/ui/sidebar';
 import { AppSidebar } from '@/features/igrp/components/app-sidebar';
 import { Header } from '@/features/igrp/components/header';
+import { ReactQueryProvider } from '@/features/igrp/providers/react-query-provider';
 
 export default function LocaleLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const router = useRouter();
   const locale = useLocale();
   const pathname = usePathname();
   const defaultOpen = Cookies.get('sidebar_state') === 'true';
-  const [queryClient] = useState(() => new QueryClient());
   const [hasMounted, setHasMounted] = useState(false);
 
   const { data: session, status } = useSession({
@@ -70,7 +69,7 @@ export default function LocaleLayout({ children }: Readonly<{ children: React.Re
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
+      <ReactQueryProvider>
         <SidebarProvider defaultOpen={defaultOpen}>
           <AppSidebar />
           <SidebarInset>
@@ -78,7 +77,7 @@ export default function LocaleLayout({ children }: Readonly<{ children: React.Re
             <main className='flex flex-col flex-1 px-6 lg:px-10 py-8'>{children}</main>
           </SidebarInset>
         </SidebarProvider>
-      </QueryClientProvider>
+      </ReactQueryProvider>
       <IGRPToaster richColors />
     </>
   );

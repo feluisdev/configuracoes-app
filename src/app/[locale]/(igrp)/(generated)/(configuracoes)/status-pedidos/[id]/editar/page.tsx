@@ -6,42 +6,66 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useRef } from 'react';
+import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import StatusPedidoForm from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/status-pedidos/components/statuspedidoform'
 import { 
   IGRPPageHeader,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
+import { IGRPFormHandle } from "@igrp/igrp-framework-react-design-system";
+
+import { useRouter } from 'next/navigation';
 
 
 export default function PageEditarstatuspedidoComponent({ params }: { params: { id: string } }) {
-  // Usar o id dos parâmetros da rota
-  const { id } = params;
+  const router = useRouter();
+  const { igrpToast } = useIGRPToast();
+  const formRef = useRef<IGRPFormHandle<any>>(null);
+
+  // Função para salvar o formulário
+  const handleSave = () => {
+    if (formRef.current) {
+      formRef.current.submit();
+    }
+  };
   
+  // Função a ser executada após o envio bem-sucedido do formulário
+  const afterSubmit = () => {
+    // Navegar de volta para a lista após atualizar com sucesso
+    router.push('/status-pedidos');
+  };
 
   return (
-<div className={ cn('page',)}    >
-	<div className={ cn('section',' space-y-6',)}    >
+<div className={cn('page')}>
+	<div className={cn('section',' space-y-6')}>
 	<IGRPPageHeader
-  title={ `Editar Status de Pedido` }
-  description={ `Atualizar status de pedido existente` }
-  showBackButton={ true }
-  urlBackButton={ `/configuracoes/status-pedidos` }
+  title={`Editar Status de Pedido`}
+  description={`Atualizar status de pedido existente`}
+  iconBackButton={`ArrowLeft`}
+  showBackButton={true}
+  urlBackButton={`/status-pedidos`}
+  variant={`h3`}
 >
   <div className="flex items-center gap-2">
     <IGRPButton
-  
-variant={ `default` }
-showIcon={ true }
-iconName={ `SaveAll` }
-  onClick={ () => {} }
->
-  Atualizar
-</IGRPButton>
-</div>
+      variant={`default`}
+      showIcon={true}
+      iconName={`SaveAll`}
+      className={cn()}
+      onClick={handleSave}
+    >
+      Atualizar
+    </IGRPButton>
+  </div>
 </IGRPPageHeader>
 
-<StatusPedidoForm id={id}></StatusPedidoForm></div></div>
+<StatusPedidoForm 
+  id={params.id} 
+  formRef={formRef as React.RefObject<IGRPFormHandle<any>>}
+  afterSubmit={afterSubmit} 
+/>
+</div>
+</div>
   );
 }

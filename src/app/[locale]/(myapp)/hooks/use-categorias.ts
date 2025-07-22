@@ -2,7 +2,8 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { 
   fetchCategorias, 
   fetchCategoriaById, 
@@ -21,12 +22,11 @@ const QUERY_KEYS = {
   CATEGORIA: (id: string) => ['categoria', id],
 };
 
-// Configurações padrão para as queries
+// Configurações específicas para as queries de categorias
+// As configurações globais são definidas no ReactQueryProvider
 const DEFAULT_QUERY_CONFIG = {
-  staleTime: 5 * 60 * 1000, // 5 minutos
-  refetchOnWindowFocus: true,
+  // Estas configurações sobrescrevem as configurações globais quando necessário
   refetchOnMount: true,
-  retry: 2,
 };
 
 /**
@@ -50,6 +50,8 @@ const DEFAULT_QUERY_CONFIG = {
  * createCategoriaMutation.mutate(novaCategoriaData);
  */
 export function useCategorias(options: FetchCategoriasOptions = {}) {
+  const { igrpToast } = useIGRPToast();
+
   const queryClient = useQueryClient();
   
   // Função utilitária para invalidar o cache de categorias
@@ -97,13 +99,16 @@ export function useCategorias(options: FetchCategoriasOptions = {}) {
   const createCategoriaMutation = useMutation({
     mutationFn: (data: CreateCategoriasServicosCommand) => createCategoria(data),
     onSuccess: () => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateCategoriasCache();
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Categoria criada',
+        description: 'A categoria foi criada com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao criar categoria:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Mutation para atualizar categoria
@@ -111,34 +116,40 @@ export function useCategorias(options: FetchCategoriasOptions = {}) {
     mutationFn: ({ id, data }: { id: string; data: CreateCategoriasServicosCommand | UpdateCategoriasServicosCommand }) => 
       updateCategoria(id, data),
     onSuccess: (data, variables) => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateCategoriasCache();
       // Também invalidar a query específica da categoria
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIA(variables.id) });
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Categoria atualizada',
+        description: 'A categoria foi atualizada com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao atualizar categoria:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Mutation para inativar categoria
   const deleteCategoriaMutation = useMutation({
     mutationFn: (id: string) => deleteCategoria(id),
     onSuccess: (data, variables) => {
+      // Invalidação automática do cache após mutação bem-sucedida
       invalidateCategoriasCache();
       // Também invalidar a query específica da categoria
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CATEGORIA(variables) });
-
+      // Feedback de sucesso ao usuário
+      igrpToast({
+        type: 'success',
+        title: 'Categoria inativada',
+        description: 'A categoria foi inativada com sucesso.',
+      });
     },
-    onError: (error) => {
-      console.error('Erro ao inativar categoria:', error);
-
-    },
+    // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
   // Retornar as funções e dados necessários
-  return {
+  return useMemo(() => ({
     // Dados e estado
     categorias: categoriasQuery.data?.list || [],
     total: categoriasQuery.data?.total || 0,
@@ -166,5 +177,5 @@ export function useCategorias(options: FetchCategoriasOptions = {}) {
       updateCategoriaMutation.reset();
       deleteCategoriaMutation.reset();
     },
-  };
+  }), [categoriasQuery, createCategoriaMutation, updateCategoriaMutation, deleteCategoriaMutation, invalidateCategoriasCache]);
 }

@@ -6,60 +6,67 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useRef } from 'react';
-import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import CategoriaForm from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/categorias/components/categoriaform'
+import { useState, useRef } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { cn } from '@igrp/igrp-framework-react-design-system';
+import CategoriaFormulario from '@/app/[locale]/(igrp)/(generated)/(configuracoes)/categorias/components/categoriaformulario';
 import { 
   IGRPPageHeader,
-	IGRPButton 
-} from "@igrp/igrp-framework-react-design-system";
+  IGRPButton,
+  IGRPFormHandle
+} from '@igrp/igrp-framework-react-design-system';
 
+export default function PageEditarComponent() {
+  const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+  const formRef = useRef<IGRPFormHandle<any>>(null);
 
-export default function PageEditarComponent({ params }: { params: { id: string } }) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const categoriaFormRef = useRef<any>(null);
-  // Usar React.use para acessar params.id de forma segura
-  const { id } = params;
-
-  const handleSubmit = () => {
-    // Acionar o submit do formulário através da referência ao componente CategoriaForm
-    if (categoriaFormRef.current && categoriaFormRef.current.submitForm) {
-      categoriaFormRef.current.submitForm();
+  // Função para lidar com o clique no botão de atualizar
+  const handleUpdate = () => {
+    if (formRef.current) {
+      formRef.current.submit();
     }
   };
 
+  // Função para redirecionar após o envio bem-sucedido
+  const afterSubmit = () => {
+    router.push('/categorias');
+  };
+
   return (
-<div className={ cn('page','space-y-6',)}    >
-	<div className={ cn('section',' space-x-6 space-y-6',)}    >
-	<IGRPPageHeader
-  title={ `Atualizar Categoria` }
-  description={ `Atualizar Categoria de Serviço` }
-  iconBackButton={ `Search` }
-  showBackButton={ true }
-  urlBackButton={ `/categorias` }
-  variant={ `h3` }
-  
->
-  <div className="flex items-center gap-2">
-    <IGRPButton
-  name={ `button1` }
-  
-variant={ `default` }
-size={ `lg` }
-showIcon={ true }
-iconName={ `SaveAll` }
+    <div className={cn('page', 'space-y-6')}>
+      <div className={cn('section', ' space-x-6 space-y-6')}>
+        <IGRPPageHeader
+          name={`pageHeader1`}
+          title={`Atualizar Categoria`}
+          description={`Atualizar Categoria de Serviço`}
+          iconBackButton={`ArrowLeft`}
+          showBackButton={true}
+          urlBackButton={`/categorias`}
+          variant={`h3`}
+        >
+          <div className="flex items-center gap-2">
+            <IGRPButton
+              name={`button1`}
+              variant={`default`}
+              size={`lg`}
+              showIcon={true}
+              iconName={`SaveAll`}
+              className={cn()}
+              onClick={handleUpdate}
+            >
+              Atualizar
+            </IGRPButton>
+          </div>
+        </IGRPPageHeader>
 
-  className={ cn() }
-  onClick={handleSubmit}
-  
->
-  Atualizar
-</IGRPButton>
-</div>
-</IGRPPageHeader>
-
-<div>
-  <CategoriaForm id={id} ref={categoriaFormRef}></CategoriaForm>
-</div></div></div>
+        <CategoriaFormulario 
+          id={id} 
+          formRef={formRef as React.RefObject<IGRPFormHandle<any>>}
+          afterSubmit={afterSubmit} 
+        />
+      </div>
+    </div>
   );
 }

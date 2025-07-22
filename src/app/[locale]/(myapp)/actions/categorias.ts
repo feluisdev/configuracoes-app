@@ -47,8 +47,9 @@ export async function fetchCategorias(options: FetchCategoriasOptions = {}): Pro
     const { search = '', page, size, sort } = options;
     
     try {
-        // Construir query params para paginação e ordenação
+        // Construir query params para busca, paginação e ordenação
         const queryParams = new URLSearchParams();
+        if (search) queryParams.append('search', search);
         if (page !== undefined) queryParams.append('page', page.toString());
         if (size !== undefined) queryParams.append('size', size.toString());
         if (sort) queryParams.append('sort', sort);
@@ -81,18 +82,37 @@ export async function fetchCategorias(options: FetchCategoriasOptions = {}): Pro
             total = categorias.length;
         }
 
-        // Filtrar por termo de busca se necessário
-        const filtered = search 
+        // Se a API não implementa a busca, filtrar localmente
+        // Isso é um fallback caso o backend não processe o parâmetro search
+        const filtered = search && !url.includes('search=') 
             ? categorias.filter(
                 (c: CategoriaServico) =>
-                    c.nome.toLowerCase().includes(search.toLowerCase()) ||
-                    c.codigo.toLowerCase().includes(search.toLowerCase())
+                    (c.nome?.toLowerCase() || '').includes(search.toLowerCase()) ||
+                    (c.codigo?.toLowerCase() || '').includes(search.toLowerCase())
               )
             : categorias;
 
+        // Preparar opções para o filtro de estado
+        // Verificar se há categorias com estados diferentes para criar as opções
+        const estadosUnicos = new Set<string>();
+        filtered.forEach(c => {
+            if (c.estado) estadosUnicos.add(c.estado);
+        });
+        
+        // Criar as opções para o filtro
+        const opcoesEstado = Array.from(estadosUnicos).map(estado => ({
+            label: estado === 'ATIVO' ? 'Ativo' : 'Inativo',
+            value: estado
+        }));
+        
+        // Se não houver estados únicos, usar opções padrão
+        const options = opcoesEstado.length > 0 
+            ? opcoesEstado 
+            : [{ label: 'Ativo', value: 'ATIVO' }, { label: 'Inativo', value: 'INATIVO' }];
+
         return {
             list: filtered,
-            options: [{ label: 'Ativo', value: 'ATIVO' }, { label: 'Inativo', value: 'INATIVO' }],
+            options,
             total: filtered.length,
             message:
                 filtered.length > 0 ? 'Dados carregados com sucesso' : 'Nenhuma categoria encontrada',

@@ -137,22 +137,38 @@ export async function fetchStatusPedidoById(id: string): Promise<StatusPedido> {
  */
 export async function createStatusPedido(data: CreateStatusPedidoCommand): Promise<StatusPedido> {
     try {
+        console.log('[ACTION][CREATE_STATUS_PEDIDO] Enviando dados:', data);
+        console.log('[ACTION][CREATE_STATUS_PEDIDO] URL:', API_ENDPOINTS.STATUS_PEDIDOS);
+        
         const res = await fetch(API_ENDPOINTS.STATUS_PEDIDOS, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         });
 
+        console.log('[ACTION][CREATE_STATUS_PEDIDO] Resposta status:', res.status, res.statusText);
+        
         if (!res.ok) {
-            const errorData = await res.json().catch(() => null);
+            const errorText = await res.text();
+            console.error('[ACTION][CREATE_STATUS_PEDIDO] Erro texto completo:', errorText);
+            
+            let errorData = null;
+            try {
+                errorData = JSON.parse(errorText);
+            } catch (e) {
+                console.error('[ACTION][CREATE_STATUS_PEDIDO] Erro ao parsear resposta JSON:', e);
+            }
+            
             throw new Error(
-                `Erro ao criar status de pedido: ${res.status} ${res.statusText}${errorData ? ` - ${errorData.message || JSON.stringify(errorData)}` : ''}`
+                `Erro ao criar status de pedido: ${res.status} ${res.statusText}${errorData ? ` - ${errorData.message || JSON.stringify(errorData)}` : ` - ${errorText}`}`
             );
         }
         
-        return await res.json();
+        const responseData = await res.json();
+        console.log('[ACTION][CREATE_STATUS_PEDIDO] Resposta dados:', responseData);
+        return responseData;
     } catch (error) {
-        console.error('Erro ao criar status de pedido:', error);
+        console.error('[ACTION][CREATE_STATUS_PEDIDO] Erro ao criar status de pedido:', error);
         throw error instanceof Error ? error : new Error('Erro desconhecido ao criar status de pedido');
     }
 }
