@@ -1,0 +1,3392 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8082",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Utente",
+            "description": "endpoint para gestao de utente"
+        },
+        {
+            "name": "Pedidos",
+            "description": "Gerenciamento de pedidos"
+        },
+        {
+            "name": "CategoriaServico",
+            "description": "categoria servico management"
+        },
+        {
+            "name": "TipoServico",
+            "description": "gestao tipo servico"
+        },
+        {
+            "name": "Servico",
+            "description": "serviços de um utente"
+        },
+        {
+            "name": "PagamentosPedidos",
+            "description": "Gerenciamento de pagamentos de pedidos"
+        },
+        {
+            "name": "Avaliações de Pedidos",
+            "description": "API para gerenciamento de avaliações de pedidos"
+        }
+    ],
+    "paths": {
+        "/utentes/v1/{id}": {
+            "get": {
+                "tags": [
+                    "Utente"
+                ],
+                "summary": "GET method to handle operations for obterUtente",
+                "description": "GET method to handle operations for obterUtente",
+                "operationId": "obterUtente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/UtenteResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Utente"
+                ],
+                "summary": "PUT method to handle operations for atualizarUtente",
+                "description": "PUT method to handle operations for atualizarUtente",
+                "operationId": "atualizarUtente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUtenteDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/UtenteResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Utente"
+                ],
+                "summary": "DELETE method to handle operations for inativarUtente",
+                "description": "DELETE method to handle operations for inativarUtente",
+                "operationId": "inativarUtente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/{id}": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "GET method to handle operations for obterPedido",
+                "description": "GET method to handle operations for obterPedido",
+                "operationId": "obterPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/PedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "PUT method to handle operations for atualizarPedido",
+                "description": "PUT method to handle operations for atualizarPedido",
+                "operationId": "atualizarPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/pagamentos/{id}/status": {
+            "put": {
+                "tags": [
+                    "PagamentosPedidos"
+                ],
+                "summary": "PUT method to handle operations for atualizarStatusPagamento",
+                "description": "PUT method to handle operations for atualizarStatusPagamento",
+                "operationId": "atualizarStatusPagamento",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateStatusPagamentoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/{id}": {
+            "get": {
+                "tags": [
+                    "configuracoes-controller"
+                ],
+                "operationId": "obterConfiguracao",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfiguracoesResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "configuracoes-controller"
+                ],
+                "operationId": "atualizarConfiguracao",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateConfiguracoesDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfiguracoesResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "configuracoes-controller"
+                ],
+                "operationId": "inativarConfiguracao",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/tiposervico/{tipoServicoId}": {
+            "get": {
+                "tags": [
+                    "TipoServico"
+                ],
+                "summary": "GET method to handle operations for getTipoServico",
+                "description": "GET method to handle operations for getTipoServico",
+                "operationId": "getTipoServico",
+                "parameters": [
+                    {
+                        "name": "tipoServicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/TiposServicosResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "TipoServico"
+                ],
+                "summary": "PUT method to handle operations for updateTipoServico",
+                "description": "PUT method to handle operations for updateTipoServico",
+                "operationId": "updateTipoServico",
+                "parameters": [
+                    {
+                        "name": "tipoServicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CriarTiposServicosDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/TiposServicosResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "TipoServico"
+                ],
+                "summary": "DELETE method to handle operations for InativarTipoServico",
+                "description": "DELETE method to handle operations for InativarTipoServico",
+                "operationId": "inativarTipoServico",
+                "parameters": [
+                    {
+                        "name": "tipoServicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/status-pedido/{id}": {
+            "get": {
+                "tags": [
+                    "status-pedido-controller"
+                ],
+                "operationId": "obterPorId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatusPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "status-pedido-controller"
+                ],
+                "operationId": "atualizar",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateStatusPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "status-pedido-controller"
+                ],
+                "operationId": "inativar",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/categoriaservico/{categoriaServicoId}": {
+            "get": {
+                "tags": [
+                    "CategoriaServico"
+                ],
+                "summary": "GET method to handle operations for getCategoriaServico",
+                "description": "GET method to handle operations for getCategoriaServico",
+                "operationId": "getCategoriaServico",
+                "parameters": [
+                    {
+                        "name": "categoriaServicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/CategoriasServicosResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "CategoriaServico"
+                ],
+                "summary": "PUT method to handle operations for updateCategoriaServico",
+                "description": "PUT method to handle operations for updateCategoriaServico",
+                "operationId": "updateCategoriaServico",
+                "parameters": [
+                    {
+                        "name": "categoriaServicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CriarCategoriasServicosDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/CategoriasServicosResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "CategoriaServico"
+                ],
+                "summary": "DELETE method to handle operations for InativarCategoriaServico",
+                "description": "DELETE method to handle operations for InativarCategoriaServico",
+                "operationId": "inativarCategoriaServico",
+                "parameters": [
+                    {
+                        "name": "categoriaServicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/utentes/v1": {
+            "get": {
+                "tags": [
+                    "Utente"
+                ],
+                "summary": "GET method to handle operations for listaDeUtentes",
+                "description": "GET method to handle operations for listaDeUtentes",
+                "operationId": "listaDeUtentes",
+                "parameters": [
+                    {
+                        "name": "tipo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "numeroUtente",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "nome",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "nif",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "documento",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Zero-based page index (0..N)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The size of the page to be returned",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/UtenteResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Utente"
+                ],
+                "summary": "POST method to handle operations for criarUtente",
+                "description": "POST method to handle operations for criarUtente",
+                "operationId": "criarUtente",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CriarUtenteDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/UtenteResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/utentes/v1/{utenteId}/servicos/{servicoId}": {
+            "get": {
+                "tags": [
+                    "Servico"
+                ],
+                "summary": "GET method to handle operations for obterDetalhesServico",
+                "description": "GET method to handle operations for obterDetalhesServico",
+                "operationId": "obterDetalhesServico",
+                "parameters": [
+                    {
+                        "name": "utenteId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "servicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/ServicoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Servico"
+                ],
+                "summary": "POST method to handle operations for adicionarServicoUtente",
+                "description": "POST method to handle operations for adicionarServicoUtente",
+                "operationId": "adicionarServicoUtente",
+                "parameters": [
+                    {
+                        "name": "utenteId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "servicoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdicionarServicoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/ServicoAssociadoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "GET method to handle operations for listarPedidos",
+                "description": "GET method to handle operations for listarPedidos",
+                "operationId": "listarPedidos",
+                "parameters": [
+                    {
+                        "name": "codigoAcompanhamento",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tipoServicoId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "cidadaoId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "userResponsavelId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "etapaAtualId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "statusId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "dataInicio",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "dataInicioFim",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "dataConclusao",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "dataConclusaoFim",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "origem",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "prioridade",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "dataInicio,desc"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/PedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "POST method to handle operations for criarPedido",
+                "description": "POST method to handle operations for criarPedido",
+                "operationId": "criarPedido",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/{id}/pagamentos": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "GET method to handle operations for listarPagamentosPedido",
+                "description": "GET method to handle operations for listarPagamentosPedido",
+                "operationId": "listarPagamentosPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/PagamentoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "POST method to handle operations for registrarPagamentoPedido",
+                "description": "POST method to handle operations for registrarPagamentoPedido",
+                "operationId": "registrarPagamentoPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePagamentoPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/{id}/historico": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "GET method to handle operations for listarHistoricoPedido",
+                "description": "GET method to handle operations for listarHistoricoPedido",
+                "operationId": "listarHistoricoPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/HistoricoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "POST method to handle operations for adicionarHistoricoPedido",
+                "description": "POST method to handle operations for adicionarHistoricoPedido",
+                "operationId": "adicionarHistoricoPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateHistoricoPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/{id}/documentos": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "GET method to handle operations for listarDocumentosPedido",
+                "description": "GET method to handle operations for listarDocumentosPedido",
+                "operationId": "listarDocumentosPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/DocumentoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "POST method to handle operations for uploadDocumentoPedido",
+                "description": "POST method to handle operations for uploadDocumentoPedido",
+                "operationId": "uploadDocumentoPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadDocumentoPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/{id}/avaliacao": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "GET method to handle operations for obterAvaliacaoPedido",
+                "description": "GET method to handle operations for obterAvaliacaoPedido",
+                "operationId": "obterAvaliacaoPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/AvaliacaoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "POST method to handle operations for avaliarPedido",
+                "description": "POST method to handle operations for avaliarPedido",
+                "operationId": "avaliarPedido",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAvaliacaoPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/pagamentos": {
+            "post": {
+                "tags": [
+                    "PagamentosPedidos"
+                ],
+                "summary": "POST method to handle operations for registrarPagamento",
+                "description": "POST method to handle operations for registrarPagamento",
+                "operationId": "registrarPagamento",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePagamentoPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/avaliacoes": {
+            "post": {
+                "tags": [
+                    "Avaliações de Pedidos"
+                ],
+                "summary": "Criar uma avaliação para um pedido",
+                "description": "Cria uma nova avaliação para um pedido específico",
+                "operationId": "criarAvaliacao",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAvaliacaoPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Avaliação criada com sucesso",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Já existe uma avaliação para este pedido",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1": {
+            "get": {
+                "tags": [
+                    "configuracoes-controller"
+                ],
+                "operationId": "listaDeConfiguracoes",
+                "parameters": [
+                    {
+                        "name": "chave",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "grupo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tipo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageable",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Pageable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageConfiguracoesResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "configuracoes-controller"
+                ],
+                "operationId": "criarConfiguracao",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CriarConfiguracoesDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfiguracoesResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/tiposervico": {
+            "get": {
+                "tags": [
+                    "TipoServico"
+                ],
+                "summary": "GET method to handle operations for listaTipoServico",
+                "description": "GET method to handle operations for listaTipoServico",
+                "operationId": "listaTipoServico",
+                "parameters": [
+                    {
+                        "name": "nome",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "codigo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "categoriaId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pagina",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "0"
+                        }
+                    },
+                    {
+                        "name": "tamanho",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "20"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/WrapperListaTipoServicoDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "TipoServico"
+                ],
+                "summary": "POST method to handle operations for createTipoServico",
+                "description": "POST method to handle operations for createTipoServico",
+                "operationId": "createTipoServico",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CriarTiposServicosDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/status-pedido": {
+            "get": {
+                "tags": [
+                    "status-pedido-controller"
+                ],
+                "operationId": "listar",
+                "parameters": [
+                    {
+                        "name": "codigo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "nome",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "visivelPortal",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "pageable",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Pageable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageStatusPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "status-pedido-controller"
+                ],
+                "operationId": "criar",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateStatusPedidoDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/configuracoes/v1/categoriaservico": {
+            "get": {
+                "tags": [
+                    "CategoriaServico"
+                ],
+                "summary": "GET method to handle operations for listaCategoriaServico",
+                "description": "GET method to handle operations for listaCategoriaServico",
+                "operationId": "listaCategoriaServico",
+                "parameters": [
+                    {
+                        "name": "nome",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "codigo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pagina",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "0"
+                        }
+                    },
+                    {
+                        "name": "tamanho",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "20"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/WrapperListaCategoriaServicoDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "CategoriaServico"
+                ],
+                "summary": "POST method to handle operations for createCategoria",
+                "description": "POST method to handle operations for createCategoria",
+                "operationId": "createCategoria",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CriarCategoriasServicosDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/utentes/v1/{utenteId}/servicos": {
+            "get": {
+                "tags": [
+                    "Servico"
+                ],
+                "summary": "GET method to handle operations for listaServicosUtente",
+                "description": "GET method to handle operations for listaServicosUtente",
+                "operationId": "listaServicosUtente",
+                "parameters": [
+                    {
+                        "name": "Tipo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Estado",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dataInicio",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dataFIm",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "utenteId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Zero-based page index (0..N)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The size of the page to be returned",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/ServicoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/pagamentos/{id}": {
+            "get": {
+                "tags": [
+                    "PagamentosPedidos"
+                ],
+                "summary": "GET method to handle operations for obterPagamento",
+                "description": "GET method to handle operations for obterPagamento",
+                "operationId": "obterPagamento",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/PagamentoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "PagamentosPedidos"
+                ],
+                "summary": "DELETE method to handle operations for excluirPagamento",
+                "description": "DELETE method to handle operations for excluirPagamento",
+                "operationId": "excluirPagamento",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/pedidos/v1/avaliacoes/{pedidoId}": {
+            "get": {
+                "tags": [
+                    "Avaliações de Pedidos"
+                ],
+                "summary": "Obter avaliação de um pedido",
+                "description": "Retorna a avaliação de um pedido específico",
+                "operationId": "obterAvaliacaoPedido_1",
+                "parameters": [
+                    {
+                        "name": "pedidoId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avaliação encontrada",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AvaliacaoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Avaliação não encontrada",
+                        "content": {
+                            "application/hal+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AvaliacaoPedidoResponseDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "UtenteResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "tipoUtente": {
+                        "type": "string",
+                        "enum": [
+                            "CIDADAO",
+                            "EMPRESA",
+                            "SERV_PUBLICO"
+                        ]
+                    },
+                    "numero": {
+                        "type": "string"
+                    },
+                    "nif": {
+                        "type": "string"
+                    },
+                    "identificacao": {
+                        "type": "string"
+                    },
+                    "nomeMae": {
+                        "type": "string"
+                    },
+                    "nomePai": {
+                        "type": "string"
+                    },
+                    "dataNascimento": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "ATIVO",
+                            "INATIVO"
+                        ]
+                    },
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "endereco": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "caixaPostal": {
+                        "type": "string"
+                    },
+                    "departamentoResponsavel": {
+                        "type": "string"
+                    },
+                    "tipoIdentificacao": {
+                        "type": "string",
+                        "enum": [
+                            "BI",
+                            "CNI",
+                            "PEC",
+                            "NIPC"
+                        ]
+                    },
+                    "genero": {
+                        "type": "string",
+                        "enum": [
+                            "MASCULINO",
+                            "FEMININO"
+                        ]
+                    },
+                    "nacionalidade": {
+                        "type": "string"
+                    },
+                    "telemovel": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nome"
+                ]
+            },
+            "UpdateUtenteDTO": {
+                "type": "object",
+                "properties": {
+                    "tipoUtente": {
+                        "type": "string",
+                        "enum": [
+                            "CIDADAO",
+                            "EMPRESA",
+                            "SERV_PUBLICO"
+                        ]
+                    },
+                    "nome": {
+                        "type": "string",
+                        "maxLength": 2147483647,
+                        "minLength": 3
+                    },
+                    "nif": {
+                        "type": "string"
+                    },
+                    "tipoIdentificacao": {
+                        "type": "string",
+                        "enum": [
+                            "BI",
+                            "CNI",
+                            "PEC",
+                            "NIPC"
+                        ]
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "ATIVO",
+                            "INATIVO"
+                        ]
+                    },
+                    "identificacao": {
+                        "type": "string"
+                    },
+                    "nomeMae": {
+                        "type": "string"
+                    },
+                    "nomePai": {
+                        "type": "string"
+                    },
+                    "dataNascimento": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "endereco": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "caixaPostal": {
+                        "type": "string"
+                    },
+                    "telemovel": {
+                        "type": "string"
+                    },
+                    "departamentoResponsavel": {
+                        "type": "string"
+                    },
+                    "genero": {
+                        "type": "string",
+                        "enum": [
+                            "MASCULINO",
+                            "FEMININO"
+                        ]
+                    },
+                    "nacionalidade": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "endereco",
+                    "estado",
+                    "identificacao",
+                    "nif",
+                    "nome",
+                    "telefone",
+                    "tipoIdentificacao",
+                    "tipoUtente"
+                ]
+            },
+            "UpdatePedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "userResponsavelId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "etapaAtualId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "statusId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataPrevisao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dataConclusao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "observacoes": {
+                        "type": "string"
+                    },
+                    "valorTotal": {
+                        "type": "number"
+                    },
+                    "prioridade": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "UpdateStatusPagamentoDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 2
+                    },
+                    "referenciaPagamento": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 0
+                    },
+                    "observacao": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 0
+                    }
+                },
+                "required": [
+                    "status"
+                ]
+            },
+            "UpdateConfiguracoesDTO": {
+                "type": "object",
+                "properties": {
+                    "chave": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "grupo": {
+                        "type": "string"
+                    },
+                    "editavel": {
+                        "type": "boolean"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "ATIVO",
+                            "INATIVO"
+                        ]
+                    }
+                }
+            },
+            "ConfiguracoesResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "chave": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "grupo": {
+                        "type": "string"
+                    },
+                    "editavel": {
+                        "type": "boolean"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "ATIVO",
+                            "INATIVO"
+                        ]
+                    }
+                }
+            },
+            "TiposServicosResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoriaId": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "prazoEstimado": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "valorBase": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "requerVistoria": {
+                        "type": "boolean"
+                    },
+                    "requerAnaliseTec": {
+                        "type": "boolean"
+                    },
+                    "requerAprovacao": {
+                        "type": "boolean"
+                    },
+                    "disponivelPortal": {
+                        "type": "boolean"
+                    },
+                    "ativo": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "CriarTiposServicosDTO": {
+                "type": "object",
+                "properties": {
+                    "categoriaId": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "prazoEstimado": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "valorBase": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "requerVistoria": {
+                        "type": "boolean"
+                    },
+                    "requerAnaliseTec": {
+                        "type": "boolean"
+                    },
+                    "requerAprovacao": {
+                        "type": "boolean"
+                    },
+                    "disponivelPortal": {
+                        "type": "boolean"
+                    },
+                    "ativo": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "codigo",
+                    "nome"
+                ]
+            },
+            "UpdateStatusPedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "codigo": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 2
+                    },
+                    "nome": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 3
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "cor": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 0
+                    },
+                    "icone": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "minLength": 0
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "visivelPortal": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "CategoriasServicosResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "icone": {
+                        "type": "string"
+                    },
+                    "cor": {
+                        "type": "string"
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ativo": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "CriarCategoriasServicosDTO": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "icone": {
+                        "type": "string"
+                    },
+                    "cor": {
+                        "type": "string"
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "ativo": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "codigo",
+                    "nome"
+                ]
+            },
+            "CriarUtenteDTO": {
+                "type": "object",
+                "properties": {
+                    "tipoUtente": {
+                        "type": "string",
+                        "enum": [
+                            "CIDADAO",
+                            "EMPRESA",
+                            "SERV_PUBLICO"
+                        ]
+                    },
+                    "nome": {
+                        "type": "string",
+                        "maxLength": 2147483647,
+                        "minLength": 3
+                    },
+                    "nif": {
+                        "type": "string"
+                    },
+                    "tipoIdentificacao": {
+                        "type": "string",
+                        "enum": [
+                            "BI",
+                            "CNI",
+                            "PEC",
+                            "NIPC"
+                        ]
+                    },
+                    "identificacao": {
+                        "type": "string"
+                    },
+                    "nomeMae": {
+                        "type": "string"
+                    },
+                    "nomePai": {
+                        "type": "string"
+                    },
+                    "dataNascimento": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "endereco": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "caixaPostal": {
+                        "type": "string"
+                    },
+                    "telemovel": {
+                        "type": "string"
+                    },
+                    "departamentoResponsavel": {
+                        "type": "string"
+                    },
+                    "genero": {
+                        "type": "string",
+                        "enum": [
+                            "MASCULINO",
+                            "FEMININO"
+                        ]
+                    },
+                    "nacionalidade": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "endereco",
+                    "identificacao",
+                    "nif",
+                    "nome",
+                    "telefone",
+                    "tipoIdentificacao",
+                    "tipoUtente"
+                ]
+            },
+            "ServicoAssociadoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "idUtente": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "idServico": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "AdicionarServicoDTO": {
+                "type": "object",
+                "properties": {
+                    "tipoServico": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "tipoServico"
+                ]
+            },
+            "CreatePedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "tipoServicoId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "cidadaoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "observacoes": {
+                        "type": "string"
+                    },
+                    "valorTotal": {
+                        "type": "number"
+                    },
+                    "origem": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 2
+                    },
+                    "prioridade": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "required": [
+                    "cidadaoId",
+                    "origem",
+                    "prioridade",
+                    "tipoServicoId"
+                ]
+            },
+            "CreatePagamentoPedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "pedidoId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "valor": {
+                        "type": "number",
+                        "format": "double",
+                        "minimum": 0.01
+                    },
+                    "metodoPagamento": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "minLength": 2
+                    },
+                    "referenciaPagamento": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 0
+                    },
+                    "observacao": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 0
+                    }
+                },
+                "required": [
+                    "metodoPagamento",
+                    "pedidoId",
+                    "valor"
+                ]
+            },
+            "CreateHistoricoPedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "pedidoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "statusId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "etapaId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "observacao": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "pedidoId",
+                    "statusId"
+                ]
+            },
+            "UploadDocumentoPedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "pedidoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 3
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipoDocumento": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "minLength": 2
+                    },
+                    "arquivo": {
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "required": [
+                    "arquivo",
+                    "nome",
+                    "pedidoId",
+                    "tipoDocumento"
+                ]
+            },
+            "CreateAvaliacaoPedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "pedidoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nota": {
+                        "type": "integer",
+                        "format": "int32",
+                        "maximum": 5,
+                        "minimum": 1
+                    },
+                    "comentario": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 0
+                    }
+                },
+                "required": [
+                    "nota",
+                    "pedidoId"
+                ]
+            },
+            "CriarConfiguracoesDTO": {
+                "type": "object",
+                "properties": {
+                    "chave": {
+                        "type": "string"
+                    },
+                    "valor": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "grupo": {
+                        "type": "string"
+                    },
+                    "editavel": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "chave",
+                    "editavel",
+                    "grupo",
+                    "tipo",
+                    "valor"
+                ]
+            },
+            "CreateStatusPedidoDTO": {
+                "type": "object",
+                "properties": {
+                    "codigo": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 2
+                    },
+                    "nome": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 3
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "cor": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "minLength": 0
+                    },
+                    "icone": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "minLength": 0
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "visivelPortal": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "codigo",
+                    "nome",
+                    "visivelPortal"
+                ]
+            },
+            "ServicoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "tipo": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "referencia": {
+                        "type": "string"
+                    },
+                    "objetoID": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataInicio": {
+                        "type": "string"
+                    },
+                    "dataFim": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string",
+                        "enum": [
+                            "ATIVO",
+                            "INATIVO"
+                        ]
+                    },
+                    "valor": {
+                        "type": "number"
+                    },
+                    "detalhes": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "codigoAcompanhamento": {
+                        "type": "string"
+                    },
+                    "tipoServicoId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "tipoServicoNome": {
+                        "type": "string"
+                    },
+                    "cidadaoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "cidadaoNome": {
+                        "type": "string"
+                    },
+                    "userCriacaoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "userCriacaoNome": {
+                        "type": "string"
+                    },
+                    "userResponsavelId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "userResponsavelNome": {
+                        "type": "string"
+                    },
+                    "etapaAtualId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "etapaAtualNome": {
+                        "type": "string"
+                    },
+                    "statusId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "statusNome": {
+                        "type": "string"
+                    },
+                    "statusCor": {
+                        "type": "string"
+                    },
+                    "dataInicio": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dataPrevisao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dataConclusao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "observacoes": {
+                        "type": "string"
+                    },
+                    "valorTotal": {
+                        "type": "number"
+                    },
+                    "origem": {
+                        "type": "string"
+                    },
+                    "prioridade": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataCriacao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dataAtualizacao": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "PagamentoPedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pedidoId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "valor": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "dataPagamento": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "metodoPagamento": {
+                        "type": "string"
+                    },
+                    "referenciaPagamento": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "observacao": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HistoricoPedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "pedidoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "statusId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "statusNome": {
+                        "type": "string"
+                    },
+                    "statusCor": {
+                        "type": "string"
+                    },
+                    "etapaId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "etapaNome": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "userNome": {
+                        "type": "string"
+                    },
+                    "dataRegistro": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "observacao": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DocumentoPedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "pedidoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "tipoDocumento": {
+                        "type": "string"
+                    },
+                    "caminhoArquivo": {
+                        "type": "string"
+                    },
+                    "tamanhoArquivo": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "dataUpload": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "userNome": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AvaliacaoPedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "pedidoId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nota": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "comentario": {
+                        "type": "string"
+                    },
+                    "dataAvaliacao": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "userNome": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Pageable": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
+                    },
+                    "sort": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "PageConfiguracoesResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ConfiguracoesResponseDTO"
+                        }
+                    },
+                    "number": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "numberOfElements": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageable": {
+                        "$ref": "#/components/schemas/PageableObject"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "empty": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "PageableObject": {
+                "type": "object",
+                "properties": {
+                    "offset": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "paged": {
+                        "type": "boolean"
+                    },
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "unpaged": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SortObject": {
+                "type": "object",
+                "properties": {
+                    "empty": {
+                        "type": "boolean"
+                    },
+                    "sorted": {
+                        "type": "boolean"
+                    },
+                    "unsorted": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ListaTipoServicoDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "tipoServicoId": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "categoria": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    }
+                }
+            },
+            "WrapperListaTipoServicoDTO": {
+                "type": "object",
+                "properties": {
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ListaTipoServicoDTO"
+                        }
+                    }
+                }
+            },
+            "PageStatusPedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/StatusPedidoResponseDTO"
+                        }
+                    },
+                    "number": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "numberOfElements": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageable": {
+                        "$ref": "#/components/schemas/PageableObject"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "empty": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "StatusPedidoResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "cor": {
+                        "type": "string"
+                    },
+                    "icone": {
+                        "type": "string"
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "visivelPortal": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ListaCategoriaDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoriaId": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "estado": {
+                        "type": "string"
+                    }
+                }
+            },
+            "WrapperListaCategoriaServicoDTO": {
+                "type": "object",
+                "properties": {
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ListaCategoriaDTO"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
