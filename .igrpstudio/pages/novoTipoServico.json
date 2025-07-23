@@ -1,12 +1,1 @@
-{
-    "type": "page",
-    "pageName": "novoTipoServico",
-    "path": "tiposservicos/novo",
-    "description": "Novo Tipo Serviço",
-    "forceDynamic": false,
-    "id": "1iye7hymbj",
-    "types": [],
-    "states": [],
-    "functions": [],
-    "parentName": "tiposServicos"
-}
+{"type":"page","pageName":"novoTipoServico","path":"(configuracoes)/tipos-servicos/novo","description":"Novo Tipo de Serviço","forceDynamic":false,"id":"novoTipoServicoPage","types":[],"states":[{"id":"state_slwOms","name":"onSubmit","type":"boolean","defaultValue":"false","imports":[]}],"functions":[],"parentName":"tiposServicos","components":{"id":"page_novo_ts","componentName":"page","label":"page","properties":{"variant":"default","commonProperties":{}},"children":[{"id":"section_novo_ts","componentName":"section","label":"section","properties":{"spaceY":"6","spaceX":"6","commonProperties":{}},"children":[{"id":"pageheader_novo_ts","tag":"pageHeader1","componentName":"pageHeader","label":"Page Header","type":"group","properties":{"title":"Novo Tipo de Serviço","description":"Registar novo tipo de serviço","variant":"h3","iconProperties":{"iconBackButton":"ArrowLeft"},"commonProperties":{"generateReference":false},"showBackButton":true,"urlBackButton":"configuracoes/tipos-servicos","isSticky":false},"children":[{"id":"btn_gravar_ts","tag":"button1","componentName":"button","label":"Button","type":"group","properties":{"content":"Gravar","variant":"default","size":"lg","iconProperties":{"showIcon":true,"iconName":"Save"},"commonProperties":{"generateReference":false}},"interactions":{"onClick":{"type":"function","function":{"fnCustomSet":"() => setOnSubmit(true)\r\n","type":"function","fnCustomCode":{"imports":[]}},"action":{}}},"allowTypes":false,"data":{},"childProperties":{}}],"interactions":{},"allowTypes":false,"data":{},"childProperties":{}},{"id":"form_comp_novo_ts","tag":"TipoServicoForm1","componentName":"TipoServicoForm","label":"TipoServicoForm","type":"group","children":[],"interactions":{"afterSubmit":{"type":"function","function":{"fnCustomCode":{"imports":[]},"fnCustomSet":"() => setOnSubmit(false)\r\n"}}},"allowTypes":false,"data":{"onSuvmit":{"state":{"id":"","name":"onSubmit","type":"","imports":[],"generate":false}}},"properties":{"customProperties":{}},"childProperties":{}}],"tag":"section2","data":{},"interactions":{}}],"tag":"page2","data":{},"interactions":{"onLoad":{"type":"function","function":{"type":"function"},"action":{}}}},"imports":[]}

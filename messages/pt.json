@@ -189,5 +189,28 @@
     "delete": "Eliminar",
     "save": "Guardar",
     "cancel": "Cancelar"
+  },
+  "categorias": {
+    "form": {
+      "nome": "Nome",
+      "codigo": "Código",
+      "descricao": "Descrição",
+      "ativo": "Ativo?",
+      "ordem": "Ordem",
+      "icone": "Ícone",
+      "cor": "Cor",
+      "nomeObrigatorio": "Nome é obrigatório",
+      "codigoObrigatorio": "Código é obrigatório"
+    },
+    "mensagens": {
+      "erro": "Erro",
+      "sucesso": "Sucesso",
+      "erroCarregar": "Erro ao carregar categoria",
+      "sucessoAtualizar": "Categoria atualizada com sucesso!",
+      "sucessoCriar": "Categoria criada com sucesso!",
+      "erroAtualizar": "Erro ao atualizar categoria",
+      "erroCriar": "Erro ao criar categoria",
+      "erroDesconhecido": "Erro desconhecido"
+    }
   }
 }
