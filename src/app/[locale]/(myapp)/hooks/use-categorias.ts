@@ -2,7 +2,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { 
   fetchCategorias, 
@@ -15,6 +15,7 @@ import {
   FetchCategoriasOptions
 } from '../actions/categorias';
 import { CategoriaServico, CreateCategoriasServicosCommand, UpdateCategoriasServicosCommand } from '../types/categorias';
+import { useDebounce } from './use-debounce';
 
 // Chaves para o React Query
 const QUERY_KEYS = {
@@ -49,22 +50,26 @@ const DEFAULT_QUERY_CONFIG = {
  * const { createCategoriaMutation } = useCategorias();
  * createCategoriaMutation.mutate(novaCategoriaData);
  */
-export function useCategorias(options: FetchCategoriasOptions = {}) {
+export function useCategorias(initialOptions: FetchCategoriasOptions = {}) {
   const { igrpToast } = useIGRPToast();
-
   const queryClient = useQueryClient();
-  
-  // Função utilitária para invalidar o cache de categorias
+
+  const [options, setOptions] = useState<FetchCategoriasOptions>(initialOptions);
+  const [debouncedSearch] = useDebounce(options.search, 500);
+
+  const queryOptions = useMemo(() => ({
+    ...options,
+    search: debouncedSearch,
+  }), [options, debouncedSearch]);
+
   const invalidateCategoriasCache = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CATEGORIAS] });
   }, [queryClient]);
 
-  // Buscar lista de categorias
   const categoriasQuery = useQuery({
-    queryKey: [QUERY_KEYS.CATEGORIAS, options],
-    queryFn: () => fetchCategorias(options),
+    queryKey: [QUERY_KEYS.CATEGORIAS, queryOptions],
+    queryFn: () => fetchCategorias(queryOptions),
     ...DEFAULT_QUERY_CONFIG,
-    // Atualizar a cada 2 minutos se a lista estiver visível
     refetchInterval: (query) => {
       const data = query.state.data as FetchCategoriasResponse | undefined;
       return data?.list?.length ? 2 * 60 * 1000 : false;
@@ -148,9 +153,7 @@ export function useCategorias(options: FetchCategoriasOptions = {}) {
     // O tratamento de erros é feito pelo ReactQueryProvider
   });
 
-  // Retornar as funções e dados necessários
   return useMemo(() => ({
-    // Dados e estado
     categorias: categoriasQuery.data?.list || [],
     total: categoriasQuery.data?.total || 0,
     options: categoriasQuery.data?.options || [],
@@ -159,17 +162,15 @@ export function useCategorias(options: FetchCategoriasOptions = {}) {
     isError: categoriasQuery.isError,
     error: categoriasQuery.error,
     categoriasQuery,
-
-    // Funções de query
+    setSearch: (search: string) => setOptions(prev => ({ ...prev, search })),
+    setPage: (page: number) => setOptions(prev => ({ ...prev, page })),
+    setSize: (size: number) => setOptions(prev => ({ ...prev, size })),
+    setSort: (sort: string) => setOptions(prev => ({ ...prev, sort })),
     getCategoriaById,
     useCategoriaById,
-    
-    // Mutations
     createCategoriaMutation,
     updateCategoriaMutation,
     deleteCategoriaMutation,
-
-    // Utilitários
     getStatusBadge,
     invalidateCategoriasCache,
     resetMutationState: () => {

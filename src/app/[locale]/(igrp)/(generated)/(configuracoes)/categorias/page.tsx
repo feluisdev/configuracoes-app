@@ -50,10 +50,6 @@ export default function PageCategoriasComponent() {
   const { igrpToast: toast } = useIGRPToast();
 
 
-  // Aplicar debounce ao filtro de categoria para evitar muitas requisições
-  const [debouncedCategoriaFilter] = useDebounce(categoriaFilter, 500);
-
-  // Usar o hook useCategorias para buscar os dados com os filtros aplicados
   const {
     categorias,
     total,
@@ -61,14 +57,15 @@ export default function PageCategoriasComponent() {
     isLoading,
     isError,
     error,
+    setSearch,
     getStatusBadge,
     deleteCategoriaMutation,
     invalidateCategoriasCache
-  } = useCategorias({
-    search: debouncedCategoriaFilter
-  });
-  
-  // Não precisamos mais recarregar dados quando o filtro mudar, pois o filtro será aplicado pela coluna
+  } = useCategorias();
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+  };
 
   const contentTabletable1 = useMemo<Table1[]>(() => {
     if (!categorias) {
@@ -94,7 +91,7 @@ export default function PageCategoriasComponent() {
   }, [options]);
 
   function goTonova(row?: any): void {
-    router.push(`/categorias/nova`);
+    router.push(`categorias/nova`);
   }
 
   function handleDelete(ids: string[]) {
@@ -265,11 +262,7 @@ export default function PageCategoriasComponent() {
                 cell: ({ row }) => {
                   return row.getValue("categoria")
                 },
-                filterFn: (row, id, value) => {
-                  if (!value) return true;
-                  const cellValue = String(row.getValue(id)).toLowerCase();
-                  return cellValue.includes(String(value).toLowerCase());
-                }
+                filterFn: IGRPDataTableFacetedFilterFn
               },
               {
                 header: ({ column }) => <IGRPDataTableHeaderSortDropdown column={column} title={`Descricao`} />
@@ -328,25 +321,14 @@ export default function PageCategoriasComponent() {
             [
               {
                 columnId: `categoria`,
-                component: (column): JSX.Element => {
-                  // Set up column filter when component mounts
-                  const CategoriaFilterComponent = () => {
-                    useEffect(() => {
-                      if (debouncedCategoriaFilter && column) {
-                        column.setFilterValue(debouncedCategoriaFilter);
-                      }
-                    }, []);
-                  
-                    return (
-                      <IGRPDataTableFilterInput 
-                        column={column} 
-                        placeholder="Filtrar por categoria..."
-                      />
-                    );
-                  }
-                  
-                  return <CategoriaFilterComponent />
-              }},
+                component: (column): JSX.Element => (
+                  <IGRPDataTableFilterInput
+                    column={column}
+                    placeholder="Filtrar por categoria..."
+                    onChange={handleSearchChange}
+                  />
+                )
+              },
               {
                 columnId: `estado`,
                 component: (column): JSX.Element => {
